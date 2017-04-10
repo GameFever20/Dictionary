@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="3dp"
                         android:text="pro-nun-ciation"
-                        android:id="@+id/noun_tv_cardview"
+                        android:id="@+id/pronunciation_tv_cardview"
                         android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
                         android:textSize="18dp" />

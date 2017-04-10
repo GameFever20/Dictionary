@@ -37,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
     TextView meaningofthewordoftheday;
 
     Dictionaryrandomwords dictionaryrandomwords;
-    ArrayList<String> randomwordnameArraylist =new ArrayList<>();
+    DictionaryPronunciationClass  dictionaryPronunciationClass=new DictionaryPronunciationClass(this);
 
+
+    ArrayList<String> myrandomWordsArraylist=new ArrayList<>();
+    ArrayList<String> myrandomwordpronunciation=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +56,8 @@ public class MainActivity extends AppCompatActivity {
         dictionaryrandomwords = new Dictionaryrandomwords(MainActivity.this);
         dictionaryrandomwords.execute();
 
-        Log.d("check",randomwordnameArraylist.size()+"");
-
-
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new RecyclerAdapter(getBaseContext(), android.R.anim.slide_in_left, randomwordnameArraylist);
-        recyclerView.setAdapter(recyclerAdapter);
 
         wordofthedayInListTextview = (TextView) findViewById(R.id.wordofthedayInListTextview);
         meaningofthewordoftheday = (TextView) findViewById(R.id.meaningofthewordoftheday);
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         Date d = new Date();
         String date = "" + (d.getYear() + "-" + d.getMonth() + "-" + d.getDay());
         dictionaryWordReceivingClass = new DictionaryWordReceivingClass(MainActivity.this, date);
-
+        dictionaryWordReceivingClass.execute();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -75,11 +73,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                dictionaryWordReceivingClass.execute();
+                Dictionary dictionary = new Dictionary();
+                dictionary.fetchWordMeaning("efficient", MainActivity.this);
 
 
             }
         });
+    }
+
+    public void updateDictionaryText(Dictionary dictionary) {
+        Log.d("inmainword", dictionary.getWord());
+        Log.d("inmainmeanig", dictionary.getWordMeaning().get(0));
+        Log.d("mainpartofspeech", dictionary.getWordPartOfSpeech().get(0));
+        Log.d("mainexample", dictionary.getWordExample().get(0));
+        Log.d("main antonym", dictionary.getWordAntonym().get(0));
+        Log.d("main Synnym", dictionary.getWordSynonms().get(0));
+        Log.d("main same contxt", dictionary.getWordSameContext().get(0));
+
+        Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
+        intent.putExtra("WordName", dictionary.getWord());
+        intent.putExtra("WordMeaning", dictionary.getWordMeaning());
+        intent.putExtra("WordExample", dictionary.getWordExample());
+        intent.putExtra("WordPartOfSpeech", dictionary.getWordPartOfSpeech());
+        intent.putExtra("WordAntonym", dictionary.getWordAntonym());
+        intent.putExtra("WordSynonym", dictionary.getWordSynonms());
+        intent.putExtra("WordSameContext", dictionary.getWordSameContext());
+        startActivity(intent);
+
+        Log.d("main check", dictionary.getWordMeaning().get(0));
+
     }
 
     public void listenerandgetterwords() {
@@ -96,9 +118,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void listenandgetrandomword(ArrayList<String> myrandomWordsArraylist){
-        randomwordnameArraylist=myrandomWordsArraylist;
-        randomwordnameArraylist.notifyAll();
+    public void listenandgetrandomword(ArrayList<String> randomWordsArraylist) {
+
+        myrandomWordsArraylist=randomWordsArraylist;
+        for (int i=0;i<myrandomWordsArraylist.size();i++){
+            dictionaryPronunciationClass.setWord(myrandomWordsArraylist.get(i));
+            dictionaryPronunciationClass.execute();
+        }
+
+    }
+    public void updatePronunciation(ArrayList<String> prolist){
+        if (prolist.size()==myrandomWordsArraylist.size()){
+            myrandomwordpronunciation=prolist;
+            recyclerAdapter = new RecyclerAdapter(getBaseContext(), android.R.anim.slide_in_left, myrandomWordsArraylist, myrandomwordpronunciation);
+            recyclerView.setAdapter(recyclerAdapter);
+        }
+
+        Log.d("check", myrandomWordsArraylist.size() + "");
+        Log.d("check", myrandomwordpronunciation.size() + "");
+
     }
 
     @Override

@@ -95,4 +95,6 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_tabbed_detail">TabbedDetailActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_scrolling_dictionary_detail">ScrollingDictionaryDetailActivity
+    </string>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    tools:context="com.example.aisha.newmaterialsearchview.ScrollingActivity">
+    tools:context="com.example.aisha.newmaterialsearchview.ScollingDetailsActivity">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
@@ -29,8 +29,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -47,18 +45,18 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
 
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="pro-nun-cia-tion"
-               android:textSize="20sp"
-               android:layout_marginTop="110dp"
-               android:layout_marginStart="30dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pro-nun-cia-tion"
+                android:textSize="20sp"
+                android:layout_marginTop="110dp"
+                android:layout_marginStart="30dp"/>
 
 
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_detail"
                 android:layout_width="394dp"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="parallax"
@@ -70,35 +68,31 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-            <android.support.v7.widget.SearchView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_view_srcolling"
-                android:background="#c3f48a67"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="10dp"
-                android:clickable="true"
-                android:layout_weight="0.84">
-            </android.support.v7.widget.SearchView>
+                <android.support.v7.widget.SearchView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_view_srcolling"
+                    android:background="#c3f48a67"
+                    android:layout_marginStart="10dp"
+                    android:clickable="true"
+                    android:layout_weight="0.84">
+                </android.support.v7.widget.SearchView>
 
 
-            <ImageButton
-                android:layout_width="51dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:onClick="addToFavouriteMethod"
-                android:background="@drawable/ic_action_name"
-                android:id="@+id/fav_imageview"
-                />
+                <ImageButton
+                    android:layout_width="51dp"
+                    android:layout_height="50dp"
+                    android:onClick="addToFavouriteMethod"
+                    android:background="@drawable/ic_action_name"
+                    android:id="@+id/fav_imageview"
+                    />
             </LinearLayout>
 
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-
     </android.support.design.widget.AppBarLayout>
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -110,6 +104,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
 
 
 

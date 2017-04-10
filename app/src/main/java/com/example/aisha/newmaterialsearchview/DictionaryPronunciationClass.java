@@ -1,7 +1,7 @@
 package com.example.aisha.newmaterialsearchview;
 
 /**
- * Created by Aisha on 4/9/2017.
+ * Created by Aisha on 4/10/2017.
  */
 
 import android.os.AsyncTask;
@@ -29,25 +29,37 @@ import cz.msebera.android.httpclient.protocol.BasicHttpContext;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 
 
-public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
+public class DictionaryPronunciationClass extends AsyncTask<Void, Void, String> {
 
-    MainActivity mainActivityclass;
-    ArrayList<String> myrandomWordsArraylist=new ArrayList<>();
-    String wordname;
+    ArrayList<String> myrandomWordPronunciationArraylist = new ArrayList<>();
+    ArrayList<String> myrandomWordnameArraylist = new ArrayList<>();
+    MainActivity mainActivity;
 
-    public void setMyrandomWordsArraylist(ArrayList<String> myrandomWordsArraylist) {
-        this.myrandomWordsArraylist = myrandomWordsArraylist;
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    String word;
+
+    public DictionaryPronunciationClass(MainActivity mainActivity, ArrayList<String> wordname) {
+        myrandomWordnameArraylist = wordname;
+    }
+
+    public ArrayList<String> getMyrandomWordPronunciationArraylist() {
+        return myrandomWordPronunciationArraylist;
+    }
+
+    public void setMyrandomWordPronunciationArraylist(ArrayList<String> myrandomWordPronunciationArraylist) {
+        this.myrandomWordPronunciationArraylist = myrandomWordPronunciationArraylist;
     }
 
 
-    public ArrayList<String> getMyrandomWordsArraylist() {
-        return myrandomWordsArraylist;
-    }
-
-
-
-    public Dictionaryrandomwords(MainActivity mymainActivityclass) {
-        mainActivityclass = mymainActivityclass;
+    public DictionaryPronunciationClass(MainActivity mainActivity) {
+        this.mainActivity=mainActivity;
     }
 
 
@@ -69,16 +81,17 @@ public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
 
         return out.toString();
     }
+
+
     @Override
     protected String doInBackground(Void... voids) {
-        Log.d("My TAg", "doInBackground: calling rest");
+        Log.d("My Pronunciation", "doInBackground: calling rest");
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext localContext = new BasicHttpContext();
         // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
 
-        HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=1&maxDictionaryCount=-1&minLength=5&maxLength=-1&limit=8&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
+        HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
         String text = null;
 
         try {
@@ -101,37 +114,27 @@ public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
         if (results != null) {
             try {
                 Log.d("Tag", "onPostExecute: " + results);
-                JSONArray jsonArray=new JSONArray(results);
+                JSONArray jsonArray = new JSONArray(results);
 
-                for (int i=0;i<jsonArray.length();i++){
-                    Log.d("wordname",jsonArray.getJSONObject(i).getString("word"));
-                    myrandomWordsArraylist.add(jsonArray.getJSONObject(i).getString("word"));
-                    //setWordname(jsonArray.getJSONObject(i).getString("word"));
-                  //  Log.d("wordname func",getWordname());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    if (jsonArray.getJSONObject(i).isNull("raw") == false) {
+                        JSONObject jsonObj = jsonArray.getJSONObject(i);
+                        myrandomWordPronunciationArraylist.add(jsonObj.getString("raw"));
+                    }
+
                 }
-
+                Log.d("prolist check", myrandomWordPronunciationArraylist.size() + "");
             } catch (JSONException je) {
                 je.printStackTrace();
             }
+            //et.setText(allKey);
 
-            Log.d("my text", "onPostExecute meaning: Executed");
-            Log.d("dictionary",myrandomWordsArraylist.size()+"");
-
+            Log.d("my text pro", "onPostExecute normal word pronun : Executed");
         } else {
-            Log.d("my text", "onPostExecute meaning: No data");
-
+            Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
         }
-        setMyrandomWordsArraylist(myrandomWordsArraylist);
-        callmainforpassingresults();
 
+        setMyrandomWordPronunciationArraylist(myrandomWordPronunciationArraylist);
+        mainActivity.updatePronunciation(getMyrandomWordPronunciationArraylist());
     }
-
-
-
-
-    public void callmainforpassingresults(){
-        mainActivityclass.listenandgetrandomword( getMyrandomWordsArraylist());
-
-    }
-
 }
