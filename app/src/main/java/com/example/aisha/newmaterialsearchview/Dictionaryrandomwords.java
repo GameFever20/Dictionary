@@ -33,6 +33,8 @@ public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
 
     MainActivity mainActivityclass;
     ArrayList<String> myrandomWordsArraylist=new ArrayList<>();
+    ArrayList<Dictionary> randomwordDictionaryAL=new ArrayList<>();
+
     String wordname;
 
     public void setMyrandomWordsArraylist(ArrayList<String> myrandomWordsArraylist) {
@@ -103,9 +105,17 @@ public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
                 Log.d("Tag", "onPostExecute: " + results);
                 JSONArray jsonArray=new JSONArray(results);
 
+
                 for (int i=0;i<jsonArray.length();i++){
                     Log.d("wordname",jsonArray.getJSONObject(i).getString("word"));
                     myrandomWordsArraylist.add(jsonArray.getJSONObject(i).getString("word"));
+
+                  //Dictionary class object
+                    Dictionary dictionary=new Dictionary(mainActivityclass);
+                    dictionary.setWord(jsonArray.getJSONObject(i).getString("word"));
+                    dictionary.fetchWordPronunciation();
+                    randomwordDictionaryAL.add(dictionary);
+
                     //setWordname(jsonArray.getJSONObject(i).getString("word"));
                   //  Log.d("wordname func",getWordname());
                 }
@@ -130,7 +140,7 @@ public class Dictionaryrandomwords extends AsyncTask<Void, Void, String>  {
 
 
     public void callmainforpassingresults(){
-        mainActivityclass.listenandgetrandomword( getMyrandomWordsArraylist());
+        mainActivityclass.listenandgetrandomword( randomwordDictionaryAL);
 
     }
 

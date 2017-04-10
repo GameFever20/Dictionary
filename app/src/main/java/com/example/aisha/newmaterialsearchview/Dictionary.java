@@ -32,10 +32,12 @@ public class Dictionary {
 
 
     private String word;
+    private String wordPronunciation;
     private ArrayList<String> wordMeaning;
     private ArrayList<String> wordPartOfSpeech;
     private boolean meaningFetched;
     private boolean antonymFetched;
+    private boolean isPronunciationFetched;
     private boolean synonymFetched;
     private MainActivity mainActivity;
     private ArrayList<String> wordExample;
@@ -43,10 +45,32 @@ public class Dictionary {
     private ArrayList<String> wordSynonms;
     private ArrayList<String> wordAntonym;
 
+
+    public boolean isPronunciationFetched() {
+        return isPronunciationFetched;
+    }
+
+    public void setPronunciationFetched(boolean pronunciationFetched) {
+        isPronunciationFetched = pronunciationFetched;
+    }
+
+
+    public String getWordPronunciation() {
+        return wordPronunciation;
+    }
+
+    public void setWordPronunciation(String wordPronunciation) {
+        this.wordPronunciation = wordPronunciation;
+    }
+
+
     public Dictionary(String word) {
         intializemeaning();
         this.word = word;
 
+    }
+    public Dictionary(MainActivity m){
+        mainActivity=m;
     }
 
     public Dictionary() {
@@ -174,6 +198,12 @@ public class Dictionary {
         new DictionarywordsmeaningGetting().execute();
         new DictionarywordsExampleGetting().execute();
         new DictionarywordsRelatedWordsGetting().execute();
+        Log.d("My TAg", "after Getwordmeaning call");
+
+    }
+
+    public void fetchWordPronunciation() {
+        new DictionarywordsPronunciationGetting().execute();
         Log.d("My TAg", "after Getwordmeaning call");
 
     }
@@ -515,6 +545,94 @@ public class Dictionary {
 
 
     }
+
+    private class DictionarywordsPronunciationGetting extends AsyncTask<Void, Void, String> {
+
+
+        public DictionarywordsPronunciationGetting() {
+        }
+
+
+        protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
+            InputStream in = entity.getContent();
+            Log.d("My TAg", "doInBackground: done calling rest");
+
+
+            StringBuffer out = new StringBuffer();
+            int n = 1;
+            while (n > 0) {
+                byte[] b = new byte[4096];
+                n = in.read(b);
+
+
+                if (n > 0) out.append(new String(b, 0, n));
+            }
+
+
+            return out.toString();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            Log.d("My TAg", "doInBackground: calling rest");
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpContext localContext = new BasicHttpContext();
+            // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+            String text = null;
+
+            try {
+                Log.d("My TAg", "doInBackground: going to call rest");
+                HttpResponse response = httpClient.execute(httpGet, localContext);
+
+                Log.d("My TAg", "doInBackground: done calling rest");
+                HttpEntity entity = response.getEntity();
+                text = getASCIIContentFromEntity(entity);
+
+            } catch (Exception e) {
+                Log.d("My TAg", "doInBackground: in catch");
+                return e.getLocalizedMessage();
+            }
+            return text;
+
+        }
+
+        protected void onPostExecute(String results) {
+
+            isPronunciationFetched=true;
+            if (results != null) {
+                try {
+                    Log.d("Tag", "onPostExecute: " + results);
+                    JSONArray jsonArray = new JSONArray(results);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        if (jsonArray.getJSONObject(i).isNull("raw") == false) {
+                            JSONObject jsonObj = jsonArray.getJSONObject(i);
+                            setWordPronunciation(jsonObj.getString("raw"));
+                        }
+
+                    }
+                    Log.d("prolist check",getWordPronunciation() + "");
+                } catch (JSONException je) {
+                    je.printStackTrace();
+                }
+                //et.setText(allKey);
+
+                Log.d("my text pro", "onPostExecute normal word pronun : Executed");
+            } else {
+                Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
+            }
+            callingMAin();
+        }
+
+
+    }
+    public void callingMAin(){
+        mainActivity.updatePronunciation();
+    }
+
 
 
 }

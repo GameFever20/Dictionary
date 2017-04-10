@@ -37,11 +37,9 @@ public class MainActivity extends AppCompatActivity {
     TextView meaningofthewordoftheday;
 
     Dictionaryrandomwords dictionaryrandomwords;
-    DictionaryPronunciationClass  dictionaryPronunciationClass=new DictionaryPronunciationClass(this);
 
 
-    ArrayList<String> myrandomWordsArraylist=new ArrayList<>();
-    ArrayList<String> myrandomwordpronunciation=new ArrayList<>();
+    ArrayList<Dictionary> myrandomWordsArraylist=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,25 +116,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void listenandgetrandomword(ArrayList<String> randomWordsArraylist) {
+    public void listenandgetrandomword(ArrayList<Dictionary> randomWordsArraylist) {
 
         myrandomWordsArraylist=randomWordsArraylist;
-        for (int i=0;i<myrandomWordsArraylist.size();i++){
-            dictionaryPronunciationClass.setWord(myrandomWordsArraylist.get(i));
-            dictionaryPronunciationClass.execute();
-        }
+        recyclerAdapter = new RecyclerAdapter(getBaseContext(), android.R.anim.slide_in_left, myrandomWordsArraylist);
+        recyclerView.setAdapter(recyclerAdapter);
+
 
     }
-    public void updatePronunciation(ArrayList<String> prolist){
-        if (prolist.size()==myrandomWordsArraylist.size()){
-            myrandomwordpronunciation=prolist;
-            recyclerAdapter = new RecyclerAdapter(getBaseContext(), android.R.anim.slide_in_left, myrandomWordsArraylist, myrandomwordpronunciation);
-            recyclerView.setAdapter(recyclerAdapter);
+    public void updatePronunciation(){
+
+        for (int i=0;i<myrandomWordsArraylist.size();i++){
+            if (!myrandomWordsArraylist.get(i).isPronunciationFetched()){
+                return;
+            }
         }
-
-        Log.d("check", myrandomWordsArraylist.size() + "");
-        Log.d("check", myrandomwordpronunciation.size() + "");
-
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     @Override

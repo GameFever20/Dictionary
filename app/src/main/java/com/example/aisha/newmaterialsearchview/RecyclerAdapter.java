@@ -30,16 +30,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     int a;
 
     public static ArrayList<String> recentWordsNameArraylist = new ArrayList<>();
-    public ArrayList<String> randomwordnameArraylist = new ArrayList<>();
-    public ArrayList<String> randomwordpronunciationArraylist = new ArrayList<>();
+    public ArrayList<Dictionary> randomwordnameArraylist = new ArrayList<>();
 
-    public RecyclerAdapter(Context baseContext, int slide_in_left, ArrayList<String> mrandomwordnameArraylist,ArrayList<String> myrandompronunciation) {
+    public RecyclerAdapter(Context baseContext, int slide_in_left, ArrayList<Dictionary> mrandomwordnameArraylist) {
         mainContext = baseContext;
         a = slide_in_left;
         randomwordnameArraylist = mrandomwordnameArraylist;
-        randomwordpronunciationArraylist=myrandompronunciation;
         Log.d("al recycler", randomwordnameArraylist.size() + "");
-        Log.d("al recycler pro", randomwordpronunciationArraylist.size() + "");
 
     }
 
@@ -56,8 +53,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
         holder.recentWOrdTextview.setText(recentWord);
-        holder.nameOfWordTextview.setText(randomwordnameArraylist.get(position));
-        holder.pronunciationTextview.setText(randomwordpronunciationArraylist.get(position));
+        holder.nameOfWordTextview.setText(randomwordnameArraylist.get(position).getWord());
+        if (randomwordnameArraylist.get(position).getWordPronunciation()!=null){
+            holder.pronunciationTextview.setText(randomwordnameArraylist.get(position).getWordPronunciation());
+
+        }
         setAnimation(holder.nameOfWordTextview, position);
 
     }
