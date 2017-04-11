@@ -42,7 +42,9 @@ public class Dictionary {
     private boolean antonymFetched;
     private boolean isPronunciationFetched;
     private boolean synonymFetched;
+
     private MainActivity mainActivity;
+    private ScrollingDictionaryDetailActivity scrollingDictionaryDetailActivity;
     private ArrayList<String> wordExample;
     private ArrayList<String> wordSameContext;
     private ArrayList<String> wordSynonms;
@@ -214,6 +216,18 @@ public class Dictionary {
 
     }
 
+    public void fetchWordMeaning(String mword, ScrollingDictionaryDetailActivity activity) {
+        this.setWord(mword.trim());
+        scrollingDictionaryDetailActivity = activity;
+        new DictionarywordsmeaningGetting().execute();
+        new DictionarywordsExampleGetting().execute();
+        new DictionarywordsRelatedWordsGetting().execute();
+        new DictionarywordsPronunciationGetting().execute();
+
+        Log.d("My TAg", "after Getwordmeaning call");
+
+    }
+
     public void fetchWordPronunciation() {
         setCalledForPronunciation(true);
         new DictionarywordsPronunciationGetting().execute();
@@ -228,9 +242,16 @@ public class Dictionary {
     public void completeFetching() {
 
         if (isMeaningFetched()) {
+
+            if (mainActivity!=null){
+                mainActivity.updateDictionaryText(this);
+
+            }
+            else if (scrollingDictionaryDetailActivity!=null){
+                scrollingDictionaryDetailActivity.updateDictionaryText(this);
+            }
             Log.d("Tag", "completeFetching: " + toString());
 
-            mainActivity.updateDictionaryText(this);
             /*call activity method and inform dictionary mening done fetching*/
         }
 

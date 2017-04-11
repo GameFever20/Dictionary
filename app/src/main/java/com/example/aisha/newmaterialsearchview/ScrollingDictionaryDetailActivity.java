@@ -38,7 +38,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     private String word;
     TextView pronunciationTextView;
 
-    int requestcode=1;
+    int requestcode = 1;
 
 
     private String pronunciation;
@@ -100,11 +100,9 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                Intent i=new Intent(ScrollingDictionaryDetailActivity.this,MainActivity.class);
-                startActivityForResult(i,requestcode);
 
-                Dictionary dictionary=new Dictionary();
-                dictionary.fetchWordMeaning(query,mainActivity);
+                Dictionary dictionary = new Dictionary();
+                dictionary.fetchWordMeaning(query, ScrollingDictionaryDetailActivity.this);
                 //mainActivity.gettingWordCallingDictionary(query);
                 Toast.makeText(ScrollingDictionaryDetailActivity.this, "Query is" + query, Toast.LENGTH_SHORT).show();
                 search_view_srcolling.setQuery("", true);
@@ -291,5 +289,15 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void updateDictionaryText(Dictionary dictionary) {
+        setWord(dictionary.getWord());
+        setWordMeaning(dictionary.getWordMeaning());
+        setWordAntonym(dictionary.getWordAntonym());
+        setWordSynonms(dictionary.getWordSynonms());
+        setWordExample(dictionary.getWordExample());
+        setWordPartOfSpeech(dictionary.getWordPartOfSpeech());
+        setWordSameContext(dictionary.getWordSameContext());
     }
 }
