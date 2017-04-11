@@ -25,11 +25,16 @@ public class TabbedDetailSynonms extends Fragment {
         TextView word_synonym_detail_tv=(TextView) rootView.findViewById(R.id.word_synonym_detail_tv);
 
         ArrayList<String> wordSynonym=ScrollingDictionaryDetailActivity.callforsynonym();
-        for (int i=0;i<wordSynonym.size();i++){
+        try {
+            for (int i=0;i<wordSynonym.size();i++){
 
-            word_synonym_detail_tv.setText(word_synonym_detail_tv.getText()+"\n * "+wordSynonym.get(i)+"\n");
+                word_synonym_detail_tv.setText(word_synonym_detail_tv.getText()+"\n * "+wordSynonym.get(i)+"\n");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d("tabbed word Synonym", wordSynonym.get(0));
+         // Log.d("tabbed word Synonym", wordSynonym.get(0));
 
 
         return tempView;

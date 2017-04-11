@@ -27,11 +27,16 @@ public class TabbedDetailAntonym extends Fragment {
         TextView word_antonym_detail_tv=(TextView) rootView.findViewById(R.id.word_antonym_detail_tv);
 
         ArrayList<String> wordAntonym=ScrollingDictionaryDetailActivity.callforantonym();
-        for (int i=0;i<wordAntonym.size();i++){
+        try {
+            for (int i=0;i<wordAntonym.size();i++){
 
-            word_antonym_detail_tv.setText(word_antonym_detail_tv.getText()+"\n * "+wordAntonym.get(i)+"\n");
+                word_antonym_detail_tv.setText(word_antonym_detail_tv.getText()+"\n * "+wordAntonym.get(i)+"\n");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d("tabbed word Antonym", wordAntonym.get(0));
+
+//        Log.d("tabbed word Antonym", wordAntonym.get(0));
 
 
         return tempView;

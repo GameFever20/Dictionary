@@ -34,6 +34,9 @@ public class Dictionary {
     private String word;
     private String wordPronunciation;
     private ArrayList<String> wordMeaning;
+
+
+    private boolean isCalledForPronunciation;
     private ArrayList<String> wordPartOfSpeech;
     private boolean meaningFetched;
     private boolean antonymFetched;
@@ -45,6 +48,13 @@ public class Dictionary {
     private ArrayList<String> wordSynonms;
     private ArrayList<String> wordAntonym;
 
+    public boolean isCalledForPronunciation() {
+        return isCalledForPronunciation;
+    }
+
+    public void setCalledForPronunciation(boolean calledForPronunciation) {
+        isCalledForPronunciation = calledForPronunciation;
+    }
 
     public boolean isPronunciationFetched() {
         return isPronunciationFetched;
@@ -198,11 +208,14 @@ public class Dictionary {
         new DictionarywordsmeaningGetting().execute();
         new DictionarywordsExampleGetting().execute();
         new DictionarywordsRelatedWordsGetting().execute();
+        new DictionarywordsPronunciationGetting().execute();
+
         Log.d("My TAg", "after Getwordmeaning call");
 
     }
 
     public void fetchWordPronunciation() {
+        setCalledForPronunciation(true);
         new DictionarywordsPronunciationGetting().execute();
         Log.d("My TAg", "after Getwordmeaning call");
 
@@ -255,13 +268,14 @@ public class Dictionary {
             Log.d("My TAg", "doInBackground: calling rest");
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
-            // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
-
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/definitions?limit=10&includeRelated=true&useCanonical=false&includeTags=false&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             String text = null;
 
+            // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             try {
+
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/definitions?limit=10&includeRelated=true&useCanonical=false&includeTags=false&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+
                 Log.d("My TAg", "doInBackground: going to call rest");
                 HttpResponse response = httpClient.execute(httpGet, localContext);
 
@@ -303,9 +317,9 @@ public class Dictionary {
                     }
 
                     setWordMeaning(normalwordmeaningarr);
-                    Log.d("wordMeaning", normalwordmeaningarr.get(0));
+  //                  Log.d("wordMeaning", normalwordmeaningarr.get(0));
                     setWordPartOfSpeech(normalwordpartofspeecharr);
-                    Log.d("wordMeaning", normalwordpartofspeecharr.get(0));
+//                    Log.d("wordMeaning", normalwordpartofspeecharr.get(0));
 
 
                 } catch (JSONException je) {
@@ -316,7 +330,7 @@ public class Dictionary {
                 Log.d("my text", "onPostExecute normal word meaning : Executed");
             } else {
                 setMeaningFetched(false);
-                completeFetching();
+               // completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
 
@@ -357,12 +371,12 @@ public class Dictionary {
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
-
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/examples?includeDuplicates=false&useCanonical=false&skip=0&limit=5&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             String text = null;
 
             try {
+
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/examples?includeDuplicates=false&useCanonical=false&skip=0&limit=5&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
                 Log.d("My TAg", "doInBackground: going to call rest");
                 HttpResponse response = httpClient.execute(httpGet, localContext);
 
@@ -410,7 +424,7 @@ public class Dictionary {
                 Log.d("my text", "onPostExecute normal word meaning : Executed");
             } else {
                 setExampleFetched(false);
-                completeFetching();
+              //  completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
 
@@ -451,12 +465,12 @@ public class Dictionary {
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
-
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/relatedWords?useCanonical=false&limitPerRelationshipType=7&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             String text = null;
 
             try {
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/relatedWords?useCanonical=false&limitPerRelationshipType=7&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+
                 Log.d("My TAg", "doInBackground: going to call rest");
                 HttpResponse response = httpClient.execute(httpGet, localContext);
 
@@ -521,9 +535,6 @@ public class Dictionary {
                     setWordAntonym(mynormalRelatedwordAntonymarrl);
                     setWordSynonms(mynormalRelatedwordSynonymarrl);
                     setWordSameContext(mynormalRelatedwordSameContextarrl);
-                    Log.d("word antonym", mynormalRelatedwordAntonymarrl.get(0));
-                    Log.d("word synonym", mynormalRelatedwordSynonymarrl.get(3));
-                    Log.d("word same contex",mynormalRelatedwordSameContextarrl.get(2));
 
 
                 } catch (JSONException je) {
@@ -532,12 +543,12 @@ public class Dictionary {
                 //et.setText(allKey);
                 setAntonymFetched(true);
                 setSynonmsFetched(true);
-                completeFetching();
+              //  completeFetching();
                 Log.d("my text", "onPostExecute normal word antonym : Executed");
             } else {
                 setAntonymFetched(false);
                 setSynonmsFetched(false);
-                completeFetching();
+               // completeFetching();
                 Log.d("my text", "onPostExecute antonym: failed to fetch antonym");
             }
 
@@ -578,12 +589,12 @@ public class Dictionary {
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
-
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             String text = null;
 
             try {
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
+
                 Log.d("My TAg", "doInBackground: going to call rest");
                 HttpResponse response = httpClient.execute(httpGet, localContext);
 
@@ -624,7 +635,15 @@ public class Dictionary {
             } else {
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
-            callingMAin();
+            if (isCalledForPronunciation()){
+                callingMAin();
+                isCalledForPronunciation=false;
+
+            }else if (!isCalledForPronunciation()){
+                completeFetching();
+                Log.d("compleexcution to main","true");
+
+            }
         }
 
 

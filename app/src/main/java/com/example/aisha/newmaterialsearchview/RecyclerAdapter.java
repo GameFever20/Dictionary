@@ -26,14 +26,14 @@ import static android.R.attr.animation;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     public String recentWord = "Random Word";
-    Context mainContext;
+    MainActivity mainActivity;
     int a;
 
     public static ArrayList<String> recentWordsNameArraylist = new ArrayList<>();
     public ArrayList<Dictionary> randomwordnameArraylist = new ArrayList<>();
 
-    public RecyclerAdapter(Context baseContext, int slide_in_left, ArrayList<Dictionary> mrandomwordnameArraylist) {
-        mainContext = baseContext;
+    public RecyclerAdapter(MainActivity main, int slide_in_left, ArrayList<Dictionary> mrandomwordnameArraylist) {
+        mainActivity = main;
         a = slide_in_left;
         randomwordnameArraylist = mrandomwordnameArraylist;
         Log.d("al recycler", randomwordnameArraylist.size() + "");
@@ -64,7 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private void setAnimation(View viewToAnimate, int posi) {
 
-        Animation animation = AnimationUtils.loadAnimation(mainContext, a);
+        Animation animation = AnimationUtils.loadAnimation(mainActivity, a);
         viewToAnimate.setAnimation(animation);
     }
 
@@ -87,10 +87,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             recentWOrdTextview = (TextView) itemView.findViewById(R.id.recent_word_tv_cardview);
             nameOfWordTextview = (TextView) itemView.findViewById(R.id.name_of_the_word_tv_cardview);
             pronunciationTextview=(TextView)itemView.findViewById(R.id.pronunciation_tv_cardview);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
+                    Log.d("onViewclick",String.valueOf(position)+"");
+                    Log.d("onViewclick",String.valueOf(nameOfWordTextview.getText())+"");
+                    mainActivity.gettingWordCallingDictionary(nameOfWordTextview.getText()+"");
                 }
             });
 

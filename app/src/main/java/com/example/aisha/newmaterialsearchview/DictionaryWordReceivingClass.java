@@ -59,7 +59,6 @@ public class DictionaryWordReceivingClass extends AsyncTask<Void, Void, String> 
     }
 
 
-
     public String getWord() {
         return word;
     }
@@ -71,7 +70,6 @@ public class DictionaryWordReceivingClass extends AsyncTask<Void, Void, String> 
     public ArrayList<String> getMyexamplelist() {
         return myexamplelist;
     }
-
 
 
     public String getNote() {
@@ -104,17 +102,16 @@ public class DictionaryWordReceivingClass extends AsyncTask<Void, Void, String> 
 
     @Override
     protected String doInBackground(Void... voids) {
+
         Log.d("My TAg", "doInBackground: calling rest");
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext localContext = new BasicHttpContext();
-        // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
-
-        HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/wordOfTheDay?date=" + date + "&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
-
         String text = null;
 
+        // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
         try {
+            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/wordOfTheDay?date=" + date + "&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+
             Log.d("My TAg", "doInBackground: going to call rest");
             HttpResponse response = httpClient.execute(httpGet, localContext);
 
@@ -145,7 +142,7 @@ public class DictionaryWordReceivingClass extends AsyncTask<Void, Void, String> 
                     if (jsonObj.getJSONArray("examples").isNull(i) == false) {
 
                         myexamplelist.add(jsonObj.getJSONArray("examples").getJSONObject(i).getString("text"));
-                        Log.d("My TAg", "examples are "+jsonObj.getJSONArray("examples").getJSONObject(i).getString("text"));
+                        Log.d("My TAg", "examples are " + jsonObj.getJSONArray("examples").getJSONObject(i).getString("text"));
 
 
                     } else {
@@ -168,14 +165,14 @@ public class DictionaryWordReceivingClass extends AsyncTask<Void, Void, String> 
                             mydefinitiontextlist.add(definationtext);
                             Log.d("My TAg", "definition text are " + definationtext);
 
-                            if (tempstoringdefinationjsonobj.isNull("partOfSpeech")!=true) {
+                            if (tempstoringdefinationjsonobj.isNull("partOfSpeech") != true) {
 
-                                    definationpartofspeech = tempstoringdefinationjsonobj.getString("partOfSpeech");
-                                    mydefinitionpartofspeechlist.add(definationpartofspeech);
-                                    Log.d("My TAg", "definition   part of speech are " + definationpartofspeech);
+                                definationpartofspeech = tempstoringdefinationjsonobj.getString("partOfSpeech");
+                                mydefinitionpartofspeechlist.add(definationpartofspeech);
+                                Log.d("My TAg", "definition   part of speech are " + definationpartofspeech);
 
-                            }else{
-                                Log.d("My TAg", "definition   part of speech are not found" );
+                            } else {
+                                Log.d("My TAg", "definition   part of speech are not found");
 
                             }
 

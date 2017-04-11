@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     Dictionaryrandomwords dictionaryrandomwords;
 
 
-    ArrayList<Dictionary> myrandomWordsArraylist=new ArrayList<>();
+    ArrayList<Dictionary> myrandomWordsArraylist = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +79,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void gettingWordCallingDictionary(String Word) {
+        Dictionary dictionary = new Dictionary();
+        dictionary.fetchWordMeaning(Word, MainActivity.this);
+
+    }
+
     public void updateDictionaryText(Dictionary dictionary) {
         Log.d("inmainword", dictionary.getWord());
-        Log.d("inmainmeanig", dictionary.getWordMeaning().get(0));
-        Log.d("mainpartofspeech", dictionary.getWordPartOfSpeech().get(0));
-        Log.d("mainexample", dictionary.getWordExample().get(0));
-        Log.d("main antonym", dictionary.getWordAntonym().get(0));
-        Log.d("main Synnym", dictionary.getWordSynonms().get(0));
-        Log.d("main same contxt", dictionary.getWordSameContext().get(0));
+        //Log.d("inmainmeanig", dictionary.getWordMeaning().get(0));
+      //  Log.d("mainpartofspeech", dictionary.getWordPartOfSpeech().get(0));
+       // Log.d("mainexample", dictionary.getWordExample().get(0));
+//        Log.d("main antonym", dictionary.getWordAntonym().get(0));
+  //      Log.d("main Synnym", dictionary.getWordSynonms().get(0));
+    //    Log.d("main same contxt", dictionary.getWordSameContext().get(0));
 
         Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
         intent.putExtra("WordName", dictionary.getWord());
@@ -96,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("WordAntonym", dictionary.getWordAntonym());
         intent.putExtra("WordSynonym", dictionary.getWordSynonms());
         intent.putExtra("WordSameContext", dictionary.getWordSameContext());
+        intent.putExtra("WordPronunciation", dictionary.getWordPronunciation());
         startActivity(intent);
 
-        Log.d("main check", dictionary.getWordMeaning().get(0));
+        Log.d("main check", dictionary.getWordPronunciation());
 
     }
+
 
     public void listenerandgetterwords() {
         Log.d("Tag", "onGettingWord " + dictionaryWordReceivingClass.getWord());
@@ -118,16 +126,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void listenandgetrandomword(ArrayList<Dictionary> randomWordsArraylist) {
 
-        myrandomWordsArraylist=randomWordsArraylist;
-        recyclerAdapter = new RecyclerAdapter(getBaseContext(), android.R.anim.slide_in_left, myrandomWordsArraylist);
+        myrandomWordsArraylist = randomWordsArraylist;
+        recyclerAdapter = new RecyclerAdapter(this, android.R.anim.slide_in_left, myrandomWordsArraylist);
         recyclerView.setAdapter(recyclerAdapter);
 
 
     }
-    public void updatePronunciation(){
 
-        for (int i=0;i<myrandomWordsArraylist.size();i++){
-            if (!myrandomWordsArraylist.get(i).isPronunciationFetched()){
+    public void updatePronunciation() {
+
+        for (int i = 0; i < myrandomWordsArraylist.size(); i++) {
+            if (!myrandomWordsArraylist.get(i).isPronunciationFetched()) {
                 return;
             }
         }
@@ -193,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(MainActivity.this, "text is " + query, Toast.LENGTH_SHORT).show();
+                gettingWordCallingDictionary(query);
                 searchView.clearAll();
                 searchView.closeSearch();
                 return true;
@@ -208,21 +218,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void callScrollingActivity(View view) {
 
-        int id = view.getId();
-
         Intent intent = new Intent(this, ScrollingActivity.class);
-
-        if (id == R.id.wordofthedayInListTextview) {
-            intent.putExtra("Name", wordofthedayInListTextview.getText().toString());
-            intent.putExtra("Meaning", dictionaryWordReceivingClass.getNote());
-            intent.putExtra("ExampleArraylist", dictionaryWordReceivingClass.getMyexamplelist());
-            intent.putExtra("DefinitionTextArraylist", dictionaryWordReceivingClass.getMydefinitiontextlist());
-            intent.putExtra("DefinitionPartOfSpeechArraylist", dictionaryWordReceivingClass.getMydefinitionpartofspeechlist());
-
-        } else if (id == R.id.name_of_the_word_tv_cardview) {
-            intent.putExtra("Name", RecyclerAdapter.recentWordsNameArraylist.get(3));
-        }
-
+        intent.putExtra("Name", dictionaryWordReceivingClass.getWord());
+        intent.putExtra("Meaning", dictionaryWordReceivingClass.getNote());
+        intent.putExtra("ExampleArraylist", dictionaryWordReceivingClass.getMyexamplelist());
+        intent.putExtra("DefinitionTextArraylist", dictionaryWordReceivingClass.getMydefinitiontextlist());
+        intent.putExtra("DefinitionPartOfSpeechArraylist", dictionaryWordReceivingClass.getMydefinitionpartofspeechlist());
         startActivity(intent);
+
     }
 }

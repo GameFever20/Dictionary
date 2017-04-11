@@ -24,11 +24,17 @@ public class TabbedDetailExample extends Fragment {
         TextView word_example_detail_tv = (TextView) rootView.findViewById(R.id.word_example_detail_tv);
 
         ArrayList<String> wordExample = ScrollingDictionaryDetailActivity.callforexample();
-        for (int i = 0; i < wordExample.size(); i++) {
 
-            word_example_detail_tv.setText(word_example_detail_tv.getText() + "\n * " + wordExample.get(i) + "\n");
+        try {
+            for (int i = 0; i < wordExample.size(); i++) {
+
+                word_example_detail_tv.setText(word_example_detail_tv.getText() + "\n * " + wordExample.get(i) + "\n");
+            }
+
+        }catch (Exception e){
+
         }
-        Log.d("tabbed word example", wordExample.get(0));
+       //  Log.d("tabbed word example", wordExample.get(0));
 
         return tempView;
     }

@@ -27,11 +27,16 @@ public class TabbedDetailSameContext extends Fragment {
         TextView word_samecontext_detail_tv=(TextView) rootView.findViewById(R.id.word_samecontext_detail_tv);
 
         ArrayList<String> wordSameContext= ScrollingDictionaryDetailActivity.callforsamecontext();
-        for (int i=0;i<wordSameContext.size();i++){
+        try {
+            for (int i=0;i<wordSameContext.size();i++){
 
-            word_samecontext_detail_tv.setText(word_samecontext_detail_tv.getText()+"\n * "+wordSameContext.get(i)+"\n");
+                word_samecontext_detail_tv.setText(word_samecontext_detail_tv.getText()+"\n * "+wordSameContext.get(i)+"\n");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d("tabbed word samecontext", wordSameContext.get(0));
+       // Log.d("tabbed word samecontext", wordSameContext.get(0));
 
 
         return tempView;

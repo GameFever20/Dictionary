@@ -1,5 +1,6 @@
 package com.example.aisha.newmaterialsearchview;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,12 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
-
 
 
     private ScrollingDictionaryDetailActivity.SectionsPagerAdapter mSectionsPagerAdapter;
@@ -35,13 +36,19 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     TabbedDetailSameContext tabbedDetailSameContext;
 
     private String word;
+    TextView pronunciationTextView;
+
+    int requestcode=1;
+
+
+    private String pronunciation;
     private MainActivity mainActivity;
-    private static ArrayList<String> wordMeaning;
-    private static ArrayList<String> wordPartOfSpeech;
-    private static ArrayList<String> wordExample;
-    private static ArrayList<String> wordSameContext;
-    private static ArrayList<String> wordSynonms;
-    private static ArrayList<String> wordAntonym;
+    private static ArrayList<String> wordMeaning = new ArrayList<>();
+    private static ArrayList<String> wordPartOfSpeech = new ArrayList<>();
+    private static ArrayList<String> wordExample = new ArrayList<>();
+    private static ArrayList<String> wordSameContext = new ArrayList<>();
+    private static ArrayList<String> wordSynonms = new ArrayList<>();
+    private static ArrayList<String> wordAntonym = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +63,10 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         setWordAntonym(getIntent().getExtras().getStringArrayList("WordAntonym"));
         setWordSynonms(getIntent().getExtras().getStringArrayList("WordSynonym"));
         setWordSameContext(getIntent().getExtras().getStringArrayList("WordSameContext"));
-        Log.d("checkscrolling",getIntent().getExtras().getStringArrayList("WordMeaning").get(0));
+        setPronunciation(getIntent().getExtras().getString("WordPronunciation"));
+
+        // Log.d("checkscrolling", getIntent().getExtras().getString("WordPronunciation"));
+
         toolbar.setTitle(getWord());
         setSupportActionBar(toolbar);
 
@@ -72,6 +82,8 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
         fav_imageview = (ImageView) findViewById(R.id.fav_imageview);
         search_view_srcolling = (SearchView) findViewById(R.id.search_view_srcolling);
+        pronunciationTextView = (TextView) findViewById(R.id.pronunciationTextView);
+        pronunciationTextView.setText(getPronunciation());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -87,6 +99,13 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         search_view_srcolling.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                Intent i=new Intent(ScrollingDictionaryDetailActivity.this,MainActivity.class);
+                startActivityForResult(i,requestcode);
+
+                Dictionary dictionary=new Dictionary();
+                dictionary.fetchWordMeaning(query,mainActivity);
+                //mainActivity.gettingWordCallingDictionary(query);
                 Toast.makeText(ScrollingDictionaryDetailActivity.this, "Query is" + query, Toast.LENGTH_SHORT).show();
                 search_view_srcolling.setQuery("", true);
                 search_view_srcolling.clearFocus();
@@ -99,7 +118,6 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
                 return true;
             }
         });
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -167,8 +185,17 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
             return null;
         }
     }
+
     public ScrollingDictionaryDetailActivity() {
 
+    }
+
+    public String getPronunciation() {
+        return pronunciation;
+    }
+
+    public void setPronunciation(String pronunciation) {
+        this.pronunciation = pronunciation;
     }
 
     public String getWord() {
@@ -236,29 +263,33 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     }
 
 
-    public static ArrayList<String> callformeaning(){
-        Log.d("in call",wordMeaning.get(0));
+    public static ArrayList<String> callformeaning() {
+//        Log.d("in call", wordMeaning.get(0));
         return wordMeaning;
     }
 
-    public static ArrayList<String> callforexample(){
+    public static ArrayList<String> callforexample() {
         return wordExample;
     }
-    public static ArrayList<String> callforantonym(){
+
+    public static ArrayList<String> callforantonym() {
         return wordAntonym;
     }
-    public static ArrayList<String> callforsynonym(){
+
+    public static ArrayList<String> callforsynonym() {
         return wordSynonms;
     }
-    public static ArrayList<String> callforsamecontext(){
+
+    public static ArrayList<String> callforsamecontext() {
         return wordSameContext;
     }
-    public static ArrayList<String> callforpartofspeech(){
+
+    public static ArrayList<String> callforpartofspeech() {
         return wordPartOfSpeech;
     }
 
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

@@ -26,10 +26,17 @@ public class TabbedDetailDefination extends Fragment {
 
         TextView word_meaning_detail_tv=(TextView) rootView.findViewById(R.id.word_meaning_detail_tv);
         ArrayList<String> wordMeaning=ScrollingDictionaryDetailActivity.callformeaning();
-        for (int i=0;i<wordMeaning.size();i++){
-            word_meaning_detail_tv.setText(word_meaning_detail_tv.getText()+"\n * "+wordMeaning.get(i)+"\n");
+        ArrayList<String> wordMeaningPart=ScrollingDictionaryDetailActivity.callforpartofspeech();
+
+        try{
+            for (int i=0;i<wordMeaning.size();i++){
+                word_meaning_detail_tv.setText(word_meaning_detail_tv.getText()+"\n * "+wordMeaning.get(i)+"\n" +" ( part of speech ) : "+wordMeaningPart.get(i));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d("tabbed word", wordMeaning.get(0));
+          // Log.d("tabbed word", wordMeaning.get(0));
 
 
         return tempView;
