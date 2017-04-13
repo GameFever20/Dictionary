@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.search_menu) {
             searchView.openSearch();
-            searchViewHandlesMethod();
+           // searchViewHandlesMethod();
             searchTextHandleMethod();
         }
 

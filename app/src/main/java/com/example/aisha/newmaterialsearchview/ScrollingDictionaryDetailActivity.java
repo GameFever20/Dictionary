@@ -25,17 +25,17 @@ import java.util.Locale;
 public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
 
-    private ScrollingDictionaryDetailActivity.SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    ImageView fav_imageview;
-    SearchView search_view_srcolling;
+        private ScrollingDictionaryDetailActivity.SectionsPagerAdapter mSectionsPagerAdapter;
+        private ViewPager mViewPager;
+        ImageView fav_imageview;
+        SearchView search_view_srcolling;
 
-    //all tabs java class
-    TabbedDetailDefination tabbedDetailDefination;
-    TabbedDetailExample tabbedDetailExample;
-    TabbedDetailAntonym tabbedDetailAntonym;
-    TabbedDetailSynonms tabbedDetailSynonms;
-    TabbedDetailSameContext tabbedDetailSameContext;
+        //all tabs java class
+        TabbedDetailDefination tabbedDetailDefination;
+        TabbedDetailExample tabbedDetailExample;
+        TabbedDetailAntonym tabbedDetailAntonym;
+        TabbedDetailSynonms tabbedDetailSynonms;
+        TabbedDetailSameContext tabbedDetailSameContext;
 
     private String word;
     TextView pronunciationTextView;
@@ -45,6 +45,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
     private String pronunciation;
     private MainActivity mainActivity;
+    Dictionary dictionary;
     Toolbar toolbar;
     TextToSpeech textToSpeech;
 
@@ -160,6 +161,13 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         textToSpeech.speak(word,TextToSpeech.QUEUE_FLUSH,null);
 
         Log.d("speak",word);
+    }
+
+    public void addToFavouriteMethod(View view) {
+
+        DatabaseHandlerBookmark databaseHandlerBookmark=new DatabaseHandlerBookmark(this);
+        databaseHandlerBookmark.addToBookMark(dictionary);
+        Toast.makeText(this, "Added to Favourite", Toast.LENGTH_SHORT).show();
     }
     public void callingDictionaryforResults(String word){
         setWord(word);
@@ -335,6 +343,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     }
 
     public void updateDictionaryText(Dictionary dictionary) {
+
         setWord(dictionary.getWord());
         setWordMeaning(dictionary.getWordMeaning());
         setWordAntonym(dictionary.getWordAntonym());
@@ -344,6 +353,8 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         setWordSameContext(dictionary.getWordSameContext());
         setPronunciation(dictionary.getWordPronunciation());
         Log.d("update scrolling", dictionary.getWord());
+
+        this.dictionary=dictionary;
 
         // toolbar.setTitle(dictionary.getWord());
         getSupportActionBar().setTitle(getWord());

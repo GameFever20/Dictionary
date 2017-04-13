@@ -37,6 +37,10 @@
         <activity
             android:name=".ScrollingDictionaryDetailActivity"
             android:label="@string/title_activity_scrolling_dictionary_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BookmarkStoringActivity"
+            android:label="@string/title_activity_bookmark_storing"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
