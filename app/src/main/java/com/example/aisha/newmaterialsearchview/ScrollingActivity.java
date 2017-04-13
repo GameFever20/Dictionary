@@ -3,6 +3,7 @@ package com.example.aisha.newmaterialsearchview;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -35,17 +37,20 @@ public class ScrollingActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     ImageView fav_imageview;
     SearchView search_view_srcolling;
+    TextView scrollingpronunciationtv;
 
     TabbedMeaning tabbedMeaning;
     TabbedDefination tabbedDefination;
     TabbedExample tabbedExample;
 
-    static String meaningoftabbed="";
+    TextToSpeech textToSpeech;
+    String nameSet;
+
+
+    static String meaningoftabbed = "";
     static ArrayList<String> exapmleslistoftabbed;
     static ArrayList<String> definitiontextlistoftabbed;
     static ArrayList<String> definitionpartofspeechlistoftabbed;
-
-
 
 
     @Override
@@ -55,13 +60,13 @@ public class ScrollingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        String nameSet=getIntent().getExtras().getString("Name");
-        meaningoftabbed=getIntent().getExtras().getString("Meaning");
-        exapmleslistoftabbed=getIntent().getExtras().getStringArrayList("ExampleArraylist");
-        definitiontextlistoftabbed=getIntent().getExtras().getStringArrayList("DefinitionTextArraylist");
-        definitionpartofspeechlistoftabbed=getIntent().getExtras().getStringArrayList("DefinitionPartOfSpeechArraylist");
-        Log.d("arraylist example",exapmleslistoftabbed.get(0));
-        Log.d("arraylistexample",definitiontextlistoftabbed.get(0));
+        nameSet = getIntent().getExtras().getString("Name");
+        meaningoftabbed = getIntent().getExtras().getString("Meaning");
+        exapmleslistoftabbed = getIntent().getExtras().getStringArrayList("ExampleArraylist");
+        definitiontextlistoftabbed = getIntent().getExtras().getStringArrayList("DefinitionTextArraylist");
+        definitionpartofspeechlistoftabbed = getIntent().getExtras().getStringArrayList("DefinitionPartOfSpeechArraylist");
+        Log.d("arraylist example", exapmleslistoftabbed.get(0));
+        Log.d("arraylistexample", definitiontextlistoftabbed.get(0));
 
         toolbar.setTitle(nameSet);
         setSupportActionBar(toolbar);
@@ -75,12 +80,15 @@ public class ScrollingActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-        fav_imageview=(ImageView)findViewById(R.id.fav_imageview);
-        search_view_srcolling=(SearchView)findViewById(R.id.search_view_srcolling);
+        fav_imageview = (ImageView) findViewById(R.id.fav_imageview);
+        search_view_srcolling = (SearchView) findViewById(R.id.search_view_srcolling);
+        scrollingpronunciationtv = (TextView) findViewById(R.id.scrollingpronunciationtv);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        Dictionary dictionary = new Dictionary();
+        dictionary.fetchWordPronunciation(this);
 
         search_view_srcolling.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +100,8 @@ public class ScrollingActivity extends AppCompatActivity {
         search_view_srcolling.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(ScrollingActivity.this, "Query is"+query, Toast.LENGTH_SHORT).show();
-                search_view_srcolling.setQuery("",true);
+                Toast.makeText(ScrollingActivity.this, "Query is" + query, Toast.LENGTH_SHORT).show();
+                search_view_srcolling.setQuery("", true);
                 search_view_srcolling.clearFocus();
                 search_view_srcolling.clearAnimation();
                 return true;
@@ -101,17 +109,25 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return true;            }
+                return true;
+            }
         });
 
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                textToSpeech.setLanguage(Locale.UK);
 
+            }
+
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                textToSpeechcall(nameSet);
 
                 //search_view_srcolling.setQueryHint("search here");
 
@@ -119,9 +135,15 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
 
-         }
+    }
+
+    public void textToSpeechcall(String word) {
 
 
+        textToSpeech.speak(word, TextToSpeech.QUEUE_FLUSH, null);
+
+        Log.d("speak", word);
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -135,13 +157,13 @@ public class ScrollingActivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                     tabbedMeaning = new TabbedMeaning();
-                     return tabbedMeaning;
+                    tabbedMeaning = new TabbedMeaning();
+                    return tabbedMeaning;
                 case 1:
-                     tabbedDefination = new TabbedDefination();
+                    tabbedDefination = new TabbedDefination();
                     return tabbedDefination;
                 case 2:
-                     tabbedExample = new TabbedExample();
+                    tabbedExample = new TabbedExample();
                     return tabbedExample;
                 default:
                     return null;
@@ -168,25 +190,38 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     }
 
-    public void addToFavouriteMethod(View view){
+    public void addToFavouriteMethod(View view) {
         Toast.makeText(this, "Added to Favourite", Toast.LENGTH_SHORT).show();
     }
 
-    public static String callforSettingMeaningTextView(){
+    public static String callforSettingMeaningTextView() {
         return meaningoftabbed;
     }
 
-    public static ArrayList<String> callforSettingExampleTextView(){
+    public static ArrayList<String> callforSettingExampleTextView() {
         return exapmleslistoftabbed;
     }
 
-    public static ArrayList<String> callforSettingDefinitionTextTextView(){
+    public static ArrayList<String> callforSettingDefinitionTextTextView() {
         return definitiontextlistoftabbed;
     }
 
-    public static ArrayList<String> callforSettingDefinitionPartofspeechTextView(){
+    public static ArrayList<String> callforSettingDefinitionPartofspeechTextView() {
         return definitionpartofspeechlistoftabbed;
     }
 
+    public void getpronunciationofwordoftheday(Dictionary dictionary) {
 
+        scrollingpronunciationtv.setText(dictionary.getWordPronunciation());
+        Log.d("received pronun", dictionary.getWordPronunciation());
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+        textToSpeech.stop();
+    }
 }

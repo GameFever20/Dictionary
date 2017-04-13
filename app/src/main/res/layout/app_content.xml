@@ -51,7 +51,7 @@
                     android:id="@+id/wordofthedayInListTextview"
                     android:transitionName="wordNameInListTextviewTransitionName"
                     android:onClick="callScrollingActivity"
-                    android:background="#caed4700"
+                    android:background="@color/colorAccent"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="35dp"
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="#caed4700"
+                    android:background="@color/colorAccent"
                     android:weightSum="1">
 
                     <TextView
@@ -78,6 +78,7 @@
                     <ImageButton
                         android:layout_width="31dp"
                         android:layout_height="30dp"
+                        android:id="@+id/textToSpeechbtnWordOftheday"
                         android:src="@drawable/ic_action_voice_search"/>
                 </LinearLayout>
 

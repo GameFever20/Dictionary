@@ -51,6 +51,7 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="pro-nun-cia-tion"
+               android:id="@+id/scrollingpronunciationtv"
                android:textSize="20sp"
                android:layout_marginTop="110dp"
                android:layout_marginStart="30dp"/>
@@ -73,6 +74,7 @@
             <android.support.v7.widget.SearchView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 android:id="@+id/search_view_srcolling"
                 android:background="#c3f48a67"
                 android:layout_marginTop="20dp"

@@ -33,14 +33,19 @@ public class TabbedDefination extends Fragment {
         definitiontextarraylist=ScrollingActivity.callforSettingDefinitionTextTextView();
         definitionpartofspeecharraylist=ScrollingActivity.callforSettingDefinitionPartofspeechTextView();
 
-        for (int i=0;i<definitiontextarraylist.size();i++){
+        try{
+            for (int i=0;i<definitiontextarraylist.size();i++){
 
-            word_defination_tv.setText(word_defination_tv.getText()+"\n"+definitiontextarraylist.get(i)+"\n");
-            if (definitionpartofspeecharraylist.size()>0){
-                word_defination_tv.setText(word_defination_tv.getText()+"\n part of speech :"+definitionpartofspeecharraylist.get(i)+"\n");
-            }else {
-                Log.d("definition set","checking");
+                word_defination_tv.setText(word_defination_tv.getText()+"\n"+definitiontextarraylist.get(i)+"\n");
+                if (definitionpartofspeecharraylist.size()>0){
+                    word_defination_tv.setText(word_defination_tv.getText()+"\n part of speech :"+definitionpartofspeecharraylist.get(i)+"\n");
+                }else {
+                    Log.d("definition set","checking");
+                }
             }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return tempView;

@@ -1,6 +1,7 @@
 package com.example.aisha.newmaterialsearchview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +13,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
+
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static android.R.attr.animation;
 
@@ -28,15 +32,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public String recentWord = "Random Word";
     MainActivity mainActivity;
     int a;
+    TextToSpeech texttospeech;
 
     public static ArrayList<String> recentWordsNameArraylist = new ArrayList<>();
     public ArrayList<Dictionary> randomwordnameArraylist = new ArrayList<>();
+
+
 
     public RecyclerAdapter(MainActivity main, int slide_in_left, ArrayList<Dictionary> mrandomwordnameArraylist) {
         mainActivity = main;
         a = slide_in_left;
         randomwordnameArraylist = mrandomwordnameArraylist;
         Log.d("al recycler", randomwordnameArraylist.size() + "");
+
+
 
     }
 
@@ -88,6 +97,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             nameOfWordTextview = (TextView) itemView.findViewById(R.id.name_of_the_word_tv_cardview);
             pronunciationTextview=(TextView)itemView.findViewById(R.id.pronunciation_tv_cardview);
 
+
+            textToSpeechImageBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("text to speech",nameOfWordTextview.getText()+"");
+                    mainActivity.textToSpeechcall(String.valueOf(nameOfWordTextview.getText()));
+
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -95,6 +113,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     Log.d("onViewclick",String.valueOf(position)+"");
                     Log.d("onViewclick",String.valueOf(nameOfWordTextview.getText())+"");
                     mainActivity.gettingWordCallingDictionary(nameOfWordTextview.getText()+"");
+
+
                 }
             });
 

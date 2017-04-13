@@ -16,11 +16,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import br.com.mauker.materialsearchview.MaterialSearchView;
 
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     TextView meaningofthewordoftheday;
 
     Dictionaryrandomwords dictionaryrandomwords;
+
+    TextToSpeech textToSpeech;
+    ImageButton textToSpeechbtnWordOftheday;
 
 
     ArrayList<Dictionary> myrandomWordsArraylist = new ArrayList<>();
@@ -59,10 +66,24 @@ public class MainActivity extends AppCompatActivity {
 
         wordofthedayInListTextview = (TextView) findViewById(R.id.wordofthedayInListTextview);
         meaningofthewordoftheday = (TextView) findViewById(R.id.meaningofthewordoftheday);
+        textToSpeechbtnWordOftheday = (ImageButton) findViewById(R.id.textToSpeechbtnWordOftheday);
 
         Date d = new Date();
-        String date = "" + (d.getYear() + "-" + d.getMonth() + "-" + d.getDay());
-        dictionaryWordReceivingClass = new DictionaryWordReceivingClass(MainActivity.this, date);
+        Calendar c = Calendar.getInstance();
+
+     /*   String sDate = c.get(Calendar.YEAR) + "-"
+                + c.get(Calendar.MONTH)+1 + "-"
+                + c.get(Calendar.DAY_OF_MONTH);
+      */
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH) + 1;
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        String sDate = year + "-" + month + "-" + day;
+
+        String date = d.getYear() + "-" + d.getMonth() + "-" + d.getDay();
+        Log.d("Todays date", sDate);
+        dictionaryWordReceivingClass = new DictionaryWordReceivingClass(MainActivity.this, sDate);
         dictionaryWordReceivingClass.execute();
 
 
@@ -71,28 +92,59 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Dictionary dictionary = new Dictionary();
-                dictionary.fetchWordMeaning("efficient", MainActivity.this);
+                //  Dictionary dictionary = new Dictionary();
+                //dictionary.fetchWordMeaning("efficient", MainActivity.this);
 
+                // searchView.openSearch();
+                //searchTextHandleMethod();
+
+                 gettingWordCallingDictionary("efficient");
 
             }
         });
+
+        textToSpeechbtnWordOftheday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textToSpeechcall(String.valueOf(wordofthedayInListTextview.getText()));
+            }
+        });
+
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                textToSpeech.setLanguage(Locale.UK);
+
+            }
+
+        });
+    }
+
+    public void textToSpeechcall(String word) {
+
+
+        textToSpeech.speak(word, TextToSpeech.QUEUE_FLUSH, null);
+
+        Log.d("speak", word);
     }
 
     public void gettingWordCallingDictionary(String Word) {
-        Dictionary dictionary = new Dictionary();
+       /* Dictionary dictionary = new Dictionary();
         dictionary.fetchWordMeaning(Word, MainActivity.this);
-
+        */
+        Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
+        intent.putExtra("WordName", Word);
+        startActivity(intent);
     }
 
     public void updateDictionaryText(Dictionary dictionary) {
         Log.d("inmainword", dictionary.getWord());
         //Log.d("inmainmeanig", dictionary.getWordMeaning().get(0));
-      //  Log.d("mainpartofspeech", dictionary.getWordPartOfSpeech().get(0));
-       // Log.d("mainexample", dictionary.getWordExample().get(0));
+        //  Log.d("mainpartofspeech", dictionary.getWordPartOfSpeech().get(0));
+        // Log.d("mainexample", dictionary.getWordExample().get(0));
 //        Log.d("main antonym", dictionary.getWordAntonym().get(0));
-  //      Log.d("main Synnym", dictionary.getWordSynonms().get(0));
-    //    Log.d("main same contxt", dictionary.getWordSameContext().get(0));
+        //      Log.d("main Synnym", dictionary.getWordSynonms().get(0));
+        //    Log.d("main same contxt", dictionary.getWordSameContext().get(0));
 
         Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
         intent.putExtra("WordName", dictionary.getWord());
@@ -178,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+        textToSpeech.stop();
     }
 
     public void searchViewHandlesMethod() {
@@ -201,10 +254,17 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                /*
+                Intent intent = new Intent(MainActivity.this, ScrollingDictionaryDetailActivity.class);
+                intent.putExtra("WordName", query);
+                startActivity(intent);
+                */
+                gettingWordCallingDictionary(query+"");
                 Toast.makeText(MainActivity.this, "text is " + query, Toast.LENGTH_SHORT).show();
-                gettingWordCallingDictionary(query);
-                searchView.clearAll();
-                searchView.closeSearch();
+
+                //searchView.clearAll();
+                //searchView.closeSearch();
                 return true;
             }
 

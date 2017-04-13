@@ -30,7 +30,7 @@ public class TabbedDetailDefination extends Fragment {
 
         try{
             for (int i=0;i<wordMeaning.size();i++){
-                word_meaning_detail_tv.setText(word_meaning_detail_tv.getText()+"\n * "+wordMeaning.get(i)+"\n" +" ( part of speech ) : "+wordMeaningPart.get(i));
+                word_meaning_detail_tv.setText(word_meaning_detail_tv.getText()+"\n * "+wordMeaning.get(i)+"\n" +" ( part of speech ) : "+wordMeaningPart.get(i)+"\n");
             }
 
         }catch (Exception e){

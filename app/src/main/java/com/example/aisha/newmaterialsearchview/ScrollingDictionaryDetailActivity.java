@@ -2,6 +2,7 @@ package com.example.aisha.newmaterialsearchview;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
@@ -43,6 +45,9 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
     private String pronunciation;
     private MainActivity mainActivity;
+    Toolbar toolbar;
+    TextToSpeech textToSpeech;
+
     private static ArrayList<String> wordMeaning = new ArrayList<>();
     private static ArrayList<String> wordPartOfSpeech = new ArrayList<>();
     private static ArrayList<String> wordExample = new ArrayList<>();
@@ -55,17 +60,20 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling_dictionary_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setWord(getIntent().getExtras().getString("WordName"));
-        setWordMeaning(getIntent().getExtras().getStringArrayList("WordMeaning"));
-        setWordExample(getIntent().getExtras().getStringArrayList("WordExample"));
-        setWordPartOfSpeech(getIntent().getExtras().getStringArrayList("WordPartOfSpeech"));
-        setWordAntonym(getIntent().getExtras().getStringArrayList("WordAntonym"));
-        setWordSynonms(getIntent().getExtras().getStringArrayList("WordSynonym"));
-        setWordSameContext(getIntent().getExtras().getStringArrayList("WordSameContext"));
-        setPronunciation(getIntent().getExtras().getString("WordPronunciation"));
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        // Log.d("checkscrolling", getIntent().getExtras().getString("WordPronunciation"));
+        setWord(getIntent().getExtras().getString("WordName"));
+
+
+        // setWordMeaning(getIntent().getExtras().getStringArrayList("WordMeaning"));
+        //setWordExample(getIntent().getExtras().getStringArrayList("WordExample"));
+        //setWordPartOfSpeech(getIntent().getExtras().getStringArrayList("WordPartOfSpeech"));
+        //setWordAntonym(getIntent().getExtras().getStringArrayList("WordAntonym"));
+        //setWordSynonms(getIntent().getExtras().getStringArrayList("WordSynonym"));
+        //setWordSameContext(getIntent().getExtras().getStringArrayList("WordSameContext"));
+        //setPronunciation(getIntent().getExtras().getString("WordPronunciation"));
+
+//         Log.d("check word meaning", getIntent().getExtras().getStringArrayList("WordMeaning").size()+"");
 
         toolbar.setTitle(getWord());
         setSupportActionBar(toolbar);
@@ -80,13 +88,18 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+      //  Dictionary dictionary = new Dictionary();
+        //dictionary.fetchWordMeaning(getWord(), ScrollingDictionaryDetailActivity.this);
+
+        callingDictionaryforResults(getWord());
+
         fav_imageview = (ImageView) findViewById(R.id.fav_imageview);
         search_view_srcolling = (SearchView) findViewById(R.id.search_view_srcolling);
         pronunciationTextView = (TextView) findViewById(R.id.pronunciationTextView);
         pronunciationTextView.setText(getPronunciation());
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
 
 
         search_view_srcolling.setOnSearchClickListener(new View.OnClickListener() {
@@ -100,11 +113,15 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-
+              /*
+                setWord(query);
                 Dictionary dictionary = new Dictionary();
                 dictionary.fetchWordMeaning(query, ScrollingDictionaryDetailActivity.this);
+                */
+                callingDictionaryforResults(query);
+
                 //mainActivity.gettingWordCallingDictionary(query);
-                Toast.makeText(ScrollingDictionaryDetailActivity.this, "Query is" + query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScrollingDictionaryDetailActivity.this, "Query is " + query, Toast.LENGTH_SHORT).show();
                 search_view_srcolling.setQuery("", true);
                 search_view_srcolling.clearFocus();
                 search_view_srcolling.clearAnimation();
@@ -118,14 +135,39 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         });
 
 
+         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                textToSpeech.setLanguage(Locale.UK);
+
+            }
+
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view,getWord() , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                textToSpeechcall(getWord());
+
             }
         });
+    }
+
+    public void textToSpeechcall(String word) {
+
+
+        textToSpeech.speak(word,TextToSpeech.QUEUE_FLUSH,null);
+
+        Log.d("speak",word);
+    }
+    public void callingDictionaryforResults(String word){
+        setWord(word);
+        Dictionary dictionary = new Dictionary();
+        dictionary.fetchWordMeaning(word, ScrollingDictionaryDetailActivity.this);
+        Log.d("calling dictionary",word);
+
+
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -262,7 +304,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
 
     public static ArrayList<String> callformeaning() {
-//        Log.d("in call", wordMeaning.get(0));
+//     Log.d("in call", wordMeaning.size()+"");
         return wordMeaning;
     }
 
@@ -289,6 +331,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        textToSpeech.stop();
     }
 
     public void updateDictionaryText(Dictionary dictionary) {
@@ -299,5 +342,22 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         setWordExample(dictionary.getWordExample());
         setWordPartOfSpeech(dictionary.getWordPartOfSpeech());
         setWordSameContext(dictionary.getWordSameContext());
+        setPronunciation(dictionary.getWordPronunciation());
+        Log.d("update scrolling", dictionary.getWord());
+
+        // toolbar.setTitle(dictionary.getWord());
+        getSupportActionBar().setTitle(getWord());
+        setSupportActionBar(toolbar);
+
+        pronunciationTextView.setText(getPronunciation());
+
+        mSectionsPagerAdapter = new ScrollingDictionaryDetailActivity.SectionsPagerAdapter(getSupportFragmentManager());
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+
     }
 }

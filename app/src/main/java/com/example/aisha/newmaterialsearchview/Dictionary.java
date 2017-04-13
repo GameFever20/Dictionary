@@ -37,18 +37,34 @@ public class Dictionary {
 
 
     private boolean isCalledForPronunciation;
-    private ArrayList<String> wordPartOfSpeech;
+    private boolean calledbyScrollingWordoftheday;
+
     private boolean meaningFetched;
     private boolean antonymFetched;
     private boolean isPronunciationFetched;
-    private boolean synonymFetched;
+    private boolean exampleFetched;
+
+    public boolean isPronunciationFetchedCheck() {
+        return pronunciationFetchedCheck;
+    }
+
+    public void setPronunciationFetchedCheck(boolean pronunciationFetchedCheck) {
+        this.pronunciationFetchedCheck = pronunciationFetchedCheck;
+    }
+
+    private boolean pronunciationFetchedCheck;
+   // private boolean synonymFetched;
 
     private MainActivity mainActivity;
     private ScrollingDictionaryDetailActivity scrollingDictionaryDetailActivity;
+    private ScrollingActivity scrollingActivity;
+
     private ArrayList<String> wordExample;
     private ArrayList<String> wordSameContext;
     private ArrayList<String> wordSynonms;
     private ArrayList<String> wordAntonym;
+    private ArrayList<String> wordPartOfSpeech;
+
 
     public boolean isCalledForPronunciation() {
         return isCalledForPronunciation;
@@ -81,8 +97,9 @@ public class Dictionary {
         this.word = word;
 
     }
-    public Dictionary(MainActivity m){
-        mainActivity=m;
+
+    public Dictionary(MainActivity m) {
+        mainActivity = m;
     }
 
     public Dictionary() {
@@ -97,7 +114,6 @@ public class Dictionary {
     public void setWordSameContext(ArrayList<String> wordSameContext) {
         this.wordSameContext = wordSameContext;
     }
-
 
 
     public ArrayList<String> getWordSynonms() {
@@ -153,35 +169,38 @@ public class Dictionary {
     public boolean isMeaningFetched() {
         return meaningFetched;
     }
+    public boolean isExampleFetched() {
+        return exampleFetched;
+    }
 
     public void setMeaningFetched(boolean meaningFetched) {
         this.meaningFetched = meaningFetched;
         if (!meaningFetched) {
-            intializemeaning();
+       //     intializemeaning();
         }
 
     }
 
-    public void setExampleFetched(boolean meaningFetched) {
-        this.meaningFetched = meaningFetched;
-        if (!meaningFetched) {
+    public void setExampleFetched(boolean exampleFetched) {
+        this.exampleFetched = exampleFetched;
+        if (!exampleFetched) {
             setWordExample(wordExample);
         }
 
     }
-    public void setAntonymFetched(boolean antonymFetched){
+
+    public void setAntonymFetched(boolean antonymFetched) {
         this.antonymFetched = antonymFetched;
         if (!antonymFetched) {
             setWordAntonym(wordAntonym);
         }
     }
 
-    public void setSynonmsFetched( boolean synonymFetched){
-        this.synonymFetched = synonymFetched;
-        if (!synonymFetched) {
-            setWordSynonms(wordSynonms);
-        }
+    public boolean isAntonymFetched() {
+        return antonymFetched;
     }
+
+
 
     private void intializemeaning() {
         setWord(word);
@@ -235,19 +254,25 @@ public class Dictionary {
 
     }
 
+    public void fetchWordPronunciation(ScrollingActivity scrollingActivity) {
+        calledbyScrollingWordoftheday=true;
+        this.scrollingActivity=scrollingActivity;
+        new DictionarywordsPronunciationGetting().execute();
+        Log.d("wordofthedaypro","after receivingpronun");
+    }
+
 
     public void processWordMeaning() {
     }
 
     public void completeFetching() {
 
-        if (isMeaningFetched()) {
+        if (isMeaningFetched()&&isExampleFetched()&&isAntonymFetched()&&isPronunciationFetchedCheck()) {
 
-            if (mainActivity!=null){
+            if (mainActivity != null) {
                 mainActivity.updateDictionaryText(this);
 
-            }
-            else if (scrollingDictionaryDetailActivity!=null){
+            } else if (scrollingDictionaryDetailActivity != null) {
                 scrollingDictionaryDetailActivity.updateDictionaryText(this);
             }
             Log.d("Tag", "completeFetching: " + toString());
@@ -294,7 +319,7 @@ public class Dictionary {
             // HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
             try {
 
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/definitions?limit=10&includeRelated=true&useCanonical=false&includeTags=false&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+                HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/definitions?limit=10&includeRelated=true&useCanonical=false&includeTags=false&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
 
                 Log.d("My TAg", "doInBackground: going to call rest");
@@ -338,7 +363,7 @@ public class Dictionary {
                     }
 
                     setWordMeaning(normalwordmeaningarr);
-  //                  Log.d("wordMeaning", normalwordmeaningarr.get(0));
+                    //                  Log.d("wordMeaning", normalwordmeaningarr.get(0));
                     setWordPartOfSpeech(normalwordpartofspeecharr);
 //                    Log.d("wordMeaning", normalwordpartofspeecharr.get(0));
 
@@ -348,10 +373,12 @@ public class Dictionary {
                 }
                 //et.setText(allKey);
                 setMeaningFetched(true);
+                completeFetching();
                 Log.d("my text", "onPostExecute normal word meaning : Executed");
             } else {
                 setMeaningFetched(false);
-               // completeFetching();
+                completeFetching();
+                // completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
 
@@ -396,7 +423,7 @@ public class Dictionary {
 
             try {
 
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/examples?includeDuplicates=false&useCanonical=false&skip=0&limit=5&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+                HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/examples?includeDuplicates=false&useCanonical=false&skip=0&limit=5&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
                 Log.d("My TAg", "doInBackground: going to call rest");
                 HttpResponse response = httpClient.execute(httpGet, localContext);
@@ -441,11 +468,11 @@ public class Dictionary {
                 }
                 //et.setText(allKey);
                 setExampleFetched(true);
-               // completeFetching();
+                completeFetching();
                 Log.d("my text", "onPostExecute normal word meaning : Executed");
             } else {
                 setExampleFetched(false);
-              //  completeFetching();
+                 completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
 
@@ -489,7 +516,7 @@ public class Dictionary {
             String text = null;
 
             try {
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/relatedWords?useCanonical=false&limitPerRelationshipType=7&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+                HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/relatedWords?useCanonical=false&limitPerRelationshipType=7&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
 
                 Log.d("My TAg", "doInBackground: going to call rest");
@@ -498,6 +525,7 @@ public class Dictionary {
                 Log.d("My TAg", "doInBackground: done calling rest");
                 HttpEntity entity = response.getEntity();
                 text = getASCIIContentFromEntity(entity);
+                Log.d("test text",text);
 
             } catch (Exception e) {
                 Log.d("My TAg", "doInBackground: in catch");
@@ -516,7 +544,7 @@ public class Dictionary {
 
                     ArrayList<String> mynormalRelatedwordAntonymarrl = new ArrayList<>();
                     ArrayList<String> mynormalRelatedwordSynonymarrl = new ArrayList<>();
-                    ArrayList<String> mynormalRelatedwordSameContextarrl=new ArrayList<>();
+                    ArrayList<String> mynormalRelatedwordSameContextarrl = new ArrayList<>();
 
 
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -527,7 +555,7 @@ public class Dictionary {
 
                             jsonArray1 = jsonArray.getJSONObject(i).getJSONArray("words");
                             for (int k = 0; k < jsonArray1.length(); k++) {
-                                mynormalRelatedwordAntonymarrl.add( jsonArray1.get(k)+"");
+                                mynormalRelatedwordAntonymarrl.add(jsonArray1.get(k) + "");
                             }
                             Log.d("check related words", jsonArray.getJSONObject(i).getJSONArray("words") + "");
                         }
@@ -535,7 +563,7 @@ public class Dictionary {
 
                             jsonArray1 = jsonArray.getJSONObject(i).getJSONArray("words");
                             for (int k = 0; k < jsonArray1.length(); k++) {
-                                mynormalRelatedwordSynonymarrl.add( jsonArray1.get(k)+"");
+                                mynormalRelatedwordSynonymarrl.add(jsonArray1.get(k) + "");
                             }
 
                             Log.d("check related words", jsonArray.getJSONObject(i).getJSONArray("words") + "");
@@ -544,7 +572,7 @@ public class Dictionary {
 
                             jsonArray1 = jsonArray.getJSONObject(i).getJSONArray("words");
                             for (int k = 0; k < jsonArray1.length(); k++) {
-                                mynormalRelatedwordSameContextarrl.add( jsonArray1.get(k)+"");
+                                mynormalRelatedwordSameContextarrl.add(jsonArray1.get(k) + "");
                             }
 
                             Log.d("check Samecontext", jsonArray.getJSONObject(i).getJSONArray("words") + "");
@@ -563,13 +591,11 @@ public class Dictionary {
                 }
                 //et.setText(allKey);
                 setAntonymFetched(true);
-                setSynonmsFetched(true);
-              //  completeFetching();
+                 completeFetching();
                 Log.d("my text", "onPostExecute normal word antonym : Executed");
             } else {
                 setAntonymFetched(false);
-                setSynonmsFetched(false);
-               // completeFetching();
+                completeFetching();
                 Log.d("my text", "onPostExecute antonym: failed to fetch antonym");
             }
 
@@ -613,7 +639,7 @@ public class Dictionary {
             String text = null;
 
             try {
-            HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
+                HttpGet httpGet = new HttpGet("http://api.wordnik.com:80/v4/word.json/" + getWord() + "/pronunciations?useCanonical=false&limit=1&api_key=8d93a189fb620cfa578070b02f8056778a640192bd39b10a4");
 
 
                 Log.d("My TAg", "doInBackground: going to call rest");
@@ -633,7 +659,7 @@ public class Dictionary {
 
         protected void onPostExecute(String results) {
 
-            isPronunciationFetched=true;
+            isPronunciationFetched = true;
             if (results != null) {
                 try {
                     Log.d("Tag", "onPostExecute: " + results);
@@ -646,33 +672,44 @@ public class Dictionary {
                         }
 
                     }
-                    Log.d("prolist check",getWordPronunciation() + "");
+                    Log.d("prolist check", getWordPronunciation() + "");
                 } catch (JSONException je) {
                     je.printStackTrace();
                 }
                 //et.setText(allKey);
-
+                setPronunciationFetchedCheck(true);
+                completeFetching();
                 Log.d("my text pro", "onPostExecute normal word pronun : Executed");
             } else {
+                setPronunciationFetchedCheck(false);
+                completeFetching();
                 Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
             }
-            if (isCalledForPronunciation()){
-                callingMAin();
-                isCalledForPronunciation=false;
+            if (isCalledForPronunciation()) {
 
-            }else if (!isCalledForPronunciation()){
+                callingMAin();
+                isCalledForPronunciation = false;
+
+
+            } else if (!isCalledForPronunciation()) {
                 completeFetching();
-                Log.d("compleexcution to main","true");
+                Log.d("compleexcution to main", "true");
+
+            }else if(calledbyScrollingWordoftheday){
+                calledbyScrollingWordoftheday=false;
+                callingScrolling();
 
             }
         }
 
 
     }
-    public void callingMAin(){
+
+    public void callingMAin() {
         mainActivity.updatePronunciation();
     }
 
-
-
+    public void callingScrolling( ){
+        scrollingActivity.getpronunciationofwordoftheday(this);
+    }
 }
