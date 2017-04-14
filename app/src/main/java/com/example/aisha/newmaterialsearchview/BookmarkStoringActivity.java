@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class BookmarkStoringActivity extends AppCompatActivity {
 
@@ -70,7 +72,10 @@ public class BookmarkStoringActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                DatabaseHandlerBookmark databaseHandlerBookmark=new DatabaseHandlerBookmark(BookmarkStoringActivity.this);
+              // ArrayList<String> s= databaseHandlerBookmark.getAllBookmarkDetailByName();
+
+                Snackbar.make(view, "hey", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

@@ -22,7 +22,7 @@ import static android.R.id.message;
 public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "BookMarkSystem";
@@ -31,7 +31,7 @@ public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
     private static final String TABLE_BOOKMARK = "BookMark";
 
     // Contacts Table Columns names
-
+    private static final String KEY_DICTIONARY_WORD_ID = "id";
     private static final String KEY_DICTIONARY_WORD_NAME = "name";
     private static final String KEY_DICTIONARY_WORD_MEANING = "meaning";
     private static final String KEY_DICTIONARY_WORD_EXAMPLE = "example";
@@ -41,7 +41,7 @@ public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
     private static final String KEY_DICTIONARY_WORD_SAMECONTEXT = "samecontext";
     private static final String KEY_DICTIONARY_WORD_PRONUNCIATION = "pronunciation";
 
-    private String[] allColumns = {DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_NAME, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_MEANING, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_PARTOFSPEECH, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_EXAMPLE, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_ANTONYM, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_SYNONYM, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_SAMECONTEXT, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_PRONUNCIATION};
+    private String[] allColumns = {DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_ID,DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_NAME, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_MEANING, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_PARTOFSPEECH, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_EXAMPLE, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_ANTONYM, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_SYNONYM, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_SAMECONTEXT, DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_PRONUNCIATION};
 
 
     public DatabaseHandlerBookmark(Context context) {
@@ -53,14 +53,14 @@ public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String CREATE_BOOKMARKS_TABLE = "CREATE TABLE " + TABLE_BOOKMARK + "("
-
-                + KEY_DICTIONARY_WORD_NAME + " TEXT,"
-                + KEY_DICTIONARY_WORD_MEANING + " TEXT,"
-                + KEY_DICTIONARY_WORD_PARTOFSPEECH + " TEXT,"
-                + KEY_DICTIONARY_WORD_EXAMPLE + " TEXT,"
-                + KEY_DICTIONARY_WORD_ANTONYM + " TEXT,"
-                + KEY_DICTIONARY_WORD_SYNONYM + " TEXT,"
-                + KEY_DICTIONARY_WORD_SAMECONTEXT + " TEXT,"
+                + KEY_DICTIONARY_WORD_ID + " integer primary key autoincrement, "
+                + KEY_DICTIONARY_WORD_NAME + " TEXT ,"
+                + KEY_DICTIONARY_WORD_MEANING + " TEXT ,"
+                + KEY_DICTIONARY_WORD_PARTOFSPEECH + " TEXT ,"
+                + KEY_DICTIONARY_WORD_EXAMPLE + " TEXT ,"
+                + KEY_DICTIONARY_WORD_ANTONYM + " TEXT ,"
+                + KEY_DICTIONARY_WORD_SYNONYM + " TEXT ,"
+                + KEY_DICTIONARY_WORD_SAMECONTEXT + " TEXT ,"
                 + KEY_DICTIONARY_WORD_PRONUNCIATION + " TEXT "
 
                 + ")";
@@ -101,21 +101,36 @@ public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
         long insertId = db.insert(TABLE_BOOKMARK, null, values);
 
         //retrieve data
-        Cursor cursor = db.query(DatabaseHandlerBookmark.TABLE_BOOKMARK, allColumns, null, null, null, null, null);
+        Cursor cursor = db.query(DatabaseHandlerBookmark.TABLE_BOOKMARK, allColumns,DatabaseHandlerBookmark.KEY_DICTIONARY_WORD_ID +" = "+insertId, null, null, null, null);
         cursor.moveToFirst();
+
+        String s = cursor.getString(1);
+        String s1 = cursor.getString(2);
+        String s2= cursor.getString(3);
+        String s3 = cursor.getString(4);
+        String s4 = cursor.getString(5);
 
         /*
         while (!cursor.isAfterLast()) {
-            String s = getDatabaseItems(cursor);
-            Log.d("Retrieve data", s);
+            String ss1 = getDatabaseItems(cursor);
+            Log.d("Retrieve data in loop", ss1);
             cursor.moveToNext();
         }*/
 
-        String s = cursor.getString(2);
+       // cursor.close();
+
+        //String s = cursor.getString(2);
         Log.d("Retrieve data", s);
+        Log.d("Retrieve data", s1);
+        Log.d("Retrieve data", s2);
+        Log.d("Retrieve data", s3);
+        Log.d("Retrieve data", s4);
+
         Log.d("Values in databse", dictionary.getWord());
         db.close(); // Closing database connection
     }
+
+
 
     public String arrayListToString(ArrayList<String> temp) {
         String storing = "";
@@ -129,9 +144,12 @@ public class DatabaseHandlerBookmark extends SQLiteOpenHelper {
     }
 
     public String getDatabaseItems(Cursor cursor) {
-        String s = cursor.getString(2);
-        // String p=cursor.getString(2);
-        return s;
+        String s = cursor.getString(1);
+        String s1 = cursor.getString(2);
+        String s2= cursor.getString(3);
+        String s3 = cursor.getString(4);
+        String s4 = cursor.getString(5);
+        return s1;
 
     }
 }

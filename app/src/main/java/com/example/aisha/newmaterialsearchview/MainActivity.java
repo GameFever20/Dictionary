@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, ScrollingActivity.class);
-            startActivity(intent);
+           // Intent intent = new Intent(this, BookmarkStoringActivity.class);
+            //startActivity(intent);
         }
         if (id == R.id.search_menu) {
             searchView.openSearch();
