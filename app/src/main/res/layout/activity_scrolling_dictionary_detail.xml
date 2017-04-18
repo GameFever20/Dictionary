@@ -22,13 +22,6 @@
         app:tabSelectedTextColor="@color/white_ish"
         />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="534dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -48,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="pro-nun-cia-tion"
+                android:textColor="@color/white_50"
                 android:id="@+id/pronunciationTextView"
                 android:textSize="20sp"
                 android:layout_marginTop="90dp"
@@ -59,7 +53,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                   </android.support.v7.widget.Toolbar>
+            <android.support.v7.widget.SearchView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_view_srcolling"
+                android:background="#c3f48a67"
+                android:layout_marginTop="20dp"
+                android:layout_margin="10dp"
+                android:clickable="true">
+            </android.support.v7.widget.SearchView>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,16 +74,6 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <android.support.v7.widget.SearchView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/search_view_srcolling"
-                    android:background="#c3f48a67"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
-                    android:clickable="true"
-                    android:layout_weight="0.84">
-                </android.support.v7.widget.SearchView>
 
 
                 <ImageButton
@@ -84,6 +81,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
                     android:onClick="addToFavouriteMethod"
+                    android:visibility="gone"
                     android:background="@drawable/ic_action_name"
                     android:id="@+id/fav_imageview"
                     />
@@ -99,8 +97,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/app_bar"
-        app:srcCompat="@android:drawable/ic_btn_speak_now"
+        app:srcCompat="@drawable/smallspeakerwhite"
         app:layout_anchorGravity="bottom|right|end"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="534dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -112,7 +112,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     int position = getAdapterPosition();
                     Log.d("onViewclick",String.valueOf(position)+"");
                     Log.d("onViewclick",String.valueOf(nameOfWordTextview.getText())+"");
-                    mainActivity.gettingWordCallingDictionary(nameOfWordTextview.getText()+"");
+                    String s=nameOfWordTextview.getText()+"";
+                    s.toLowerCase();
+                    mainActivity.gettingWordCallingDictionary(s);
 
 
                 }

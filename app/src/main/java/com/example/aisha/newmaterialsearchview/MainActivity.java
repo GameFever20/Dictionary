@@ -2,6 +2,7 @@ package com.example.aisha.newmaterialsearchview;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -58,8 +59,14 @@ public class MainActivity extends AppCompatActivity {
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        dictionaryrandomwords = new Dictionaryrandomwords(MainActivity.this);
-        dictionaryrandomwords.execute();
+        if (isInternetOn()) {
+            dictionaryrandomwords = new Dictionaryrandomwords(MainActivity.this);
+            dictionaryrandomwords.execute();
+            Log.d("Internet check",true+"");
+
+        }else{
+            Toast.makeText(this, "CONNECT TO INTERNET", Toast.LENGTH_LONG).show();
+      }
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -68,23 +75,22 @@ public class MainActivity extends AppCompatActivity {
         meaningofthewordoftheday = (TextView) findViewById(R.id.meaningofthewordoftheday);
         textToSpeechbtnWordOftheday = (ImageButton) findViewById(R.id.textToSpeechbtnWordOftheday);
 
-        Date d = new Date();
         Calendar c = Calendar.getInstance();
-
-     /*   String sDate = c.get(Calendar.YEAR) + "-"
-                + c.get(Calendar.MONTH)+1 + "-"
-                + c.get(Calendar.DAY_OF_MONTH);
-      */
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH) + 1;
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         String sDate = year + "-" + month + "-" + day;
-
-        String date = d.getYear() + "-" + d.getMonth() + "-" + d.getDay();
         Log.d("Todays date", sDate);
-        dictionaryWordReceivingClass = new DictionaryWordReceivingClass(MainActivity.this, sDate);
-        dictionaryWordReceivingClass.execute();
+        if (isInternetOn()) {
+            dictionaryWordReceivingClass = new DictionaryWordReceivingClass(MainActivity.this, sDate);
+            dictionaryWordReceivingClass.execute();
+            Log.d("Internet check",true+"");
+
+        }else{
+            Toast.makeText(this, "CONNECT TO INTERNET", Toast.LENGTH_LONG).show();
+        }
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -95,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
                 //  Dictionary dictionary = new Dictionary();
                 //dictionary.fetchWordMeaning("efficient", MainActivity.this);
 
-                // searchView.openSearch();
-                //searchTextHandleMethod();
+                searchView.openSearch();
+                searchTextHandleMethod();
 
-                 gettingWordCallingDictionary("efficient");
+                //    gettingWordCallingDictionary("efficient");
 
             }
         });
@@ -132,9 +138,11 @@ public class MainActivity extends AppCompatActivity {
        /* Dictionary dictionary = new Dictionary();
         dictionary.fetchWordMeaning(Word, MainActivity.this);
         */
+
         Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
         intent.putExtra("WordName", Word);
         startActivity(intent);
+
     }
 
     public void updateDictionaryText(Dictionary dictionary) {
@@ -163,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void listenerandgetterwords() {
+
         Log.d("Tag", "onGettingWord " + dictionaryWordReceivingClass.getWord());
 
         wordofthedayInListTextview.setText(dictionaryWordReceivingClass.getWord());
@@ -172,8 +181,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             meaningofthewordoftheday.setText(dictionaryWordReceivingClass.getNote().substring(0, 25));
         }
-
-
     }
 
     public void listenandgetrandomword(ArrayList<Dictionary> randomWordsArraylist) {
@@ -210,13 +217,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-           // Intent intent = new Intent(this, BookmarkStoringActivity.class);
-            //startActivity(intent);
-        }
         if (id == R.id.search_menu) {
             searchView.openSearch();
-           // searchViewHandlesMethod();
+            // searchViewHandlesMethod();
             searchTextHandleMethod();
         }
 
@@ -260,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("WordName", query);
                 startActivity(intent);
                 */
-                gettingWordCallingDictionary(query+"");
-                Toast.makeText(MainActivity.this, "text is " + query, Toast.LENGTH_SHORT).show();
+                gettingWordCallingDictionary(query);
+                Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
 
-                //searchView.clearAll();
-                //searchView.closeSearch();
+                searchView.clearAll();
+                searchView.closeSearch();
                 return true;
             }
 
@@ -287,4 +290,37 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    @Override
+    protected void onDestroy() {
+        textToSpeech.stop();
+        textToSpeech.shutdown();
+        super.onDestroy();
+    }
+
+    public boolean isInternetOn() {
+
+        // get Connectivity Manager object to check connection
+        ConnectivityManager connec =
+                (ConnectivityManager) getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+
+        // Check for network connections
+        if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
+
+
+            return true;
+
+        } else if (
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
+                        connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED) {
+
+
+            return false;
+        }
+        return false;
+    }
 }
+

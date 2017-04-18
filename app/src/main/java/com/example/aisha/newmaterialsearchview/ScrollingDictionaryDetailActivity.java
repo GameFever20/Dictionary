@@ -74,7 +74,7 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
         //setWordSameContext(getIntent().getExtras().getStringArrayList("WordSameContext"));
         //setPronunciation(getIntent().getExtras().getString("WordPronunciation"));
 
-//         Log.d("check word meaning", getIntent().getExtras().getStringArrayList("WordMeaning").size()+"");
+        // Log.d("check word meaning", getIntent().getExtras().getStringArrayList("WordMeaning").size()+"");
 
         toolbar.setTitle(getWord());
         setSupportActionBar(toolbar);
@@ -339,7 +339,20 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        /*
         textToSpeech.stop();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        */
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        textToSpeech.stop();
+        textToSpeech.shutdown();
+        super.onDestroy();
     }
 
     public void updateDictionaryText(Dictionary dictionary) {

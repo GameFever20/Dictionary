@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
+    android:layout_marginBottom="8dp"
     android:onClick="callScrollingActivity"
     android:padding="10dp"
     android:paddingBottom="4dp"
-    android:paddingEnd="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingStart="10dp"
+    android:paddingEnd="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingStart="8dp"
     app:cardBackgroundColor="@color/light_orange"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,8 +59,9 @@
                     android:background="@color/light_orange"
                     android:text="Efficient"
                     android:layout_marginLeft="10dp"
+                    android:layout_margin="10dp"
                     android:textAlignment="center"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="25dp" />
 
                 <LinearLayout
@@ -73,17 +74,17 @@
                         android:id="@+id/pronunciation_tv_cardview"
                         android:layout_width="223dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
-                        android:text="pro-nun-ciation"
-                        android:textColor="@color/black"
+                        android:text="pro-nun-cia-tion"
+                        android:textColor="@color/black_50"
                         android:textSize="18dp" />
 
                     <ImageButton
                         android:id="@+id/text_to_speech_imagebtn_cardview"
-                        android:layout_width="wrap_content"
+                        android:layout_width="30dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_action_voice_search"
+                        android:background="@drawable/smallspeaker"
                         android:textAlignment="viewEnd" />
 
                 </LinearLayout>

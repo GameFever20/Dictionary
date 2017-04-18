@@ -1,6 +1,7 @@
 package com.example.aisha.newmaterialsearchview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -90,28 +91,7 @@ public class ScrollingActivity extends AppCompatActivity {
         Dictionary dictionary = new Dictionary();
         dictionary.fetchWordPronunciation(this);
 
-        search_view_srcolling.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ScrollingActivity.this, "Opened", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        search_view_srcolling.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(ScrollingActivity.this, "Query is" + query, Toast.LENGTH_SHORT).show();
-                search_view_srcolling.setQuery("", true);
-                search_view_srcolling.clearFocus();
-                search_view_srcolling.clearAnimation();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
 
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -221,7 +201,27 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        /*
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        */
         super.onBackPressed();
+
+
+    }
+
+    @Override
+    protected void onPause() {
         textToSpeech.stop();
+        textToSpeech.shutdown();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        textToSpeech.stop();
+        textToSpeech.shutdown();
+        super.onDestroy();
     }
 }

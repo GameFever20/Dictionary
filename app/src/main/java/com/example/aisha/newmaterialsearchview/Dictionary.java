@@ -93,7 +93,7 @@ public class Dictionary {
 
 
     public Dictionary(String word) {
-        intializemeaning();
+        //intializemeaning();
         this.word = word;
 
     }
@@ -103,7 +103,7 @@ public class Dictionary {
     }
 
     public Dictionary() {
-        intializemeaning();
+
     }
 
 
@@ -236,10 +236,14 @@ public class Dictionary {
     }
 
     public void fetchWordMeaning(String mword, ScrollingDictionaryDetailActivity activity) {
-        this.setWord(mword.trim());
+
+        String s=mword;
+        s=s.toLowerCase().trim();
+        this.setWord(s);
         scrollingDictionaryDetailActivity = activity;
-        new DictionarywordsmeaningGetting().execute();
         new DictionarywordsExampleGetting().execute();
+
+        new DictionarywordsmeaningGetting().execute();
         new DictionarywordsRelatedWordsGetting().execute();
         new DictionarywordsPronunciationGetting().execute();
 
@@ -345,7 +349,7 @@ public class Dictionary {
                     ArrayList<String> normalwordmeaningarr = new ArrayList<>();
                     ArrayList<String> normalwordpartofspeecharr = new ArrayList<>();
 
-                    setWord(jsonArray.getJSONObject(0).getString("word"));
+                   // setWord(jsonArray.getJSONObject(0).getString("word"));
 
                     for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -379,7 +383,7 @@ public class Dictionary {
                 setMeaningFetched(false);
                 completeFetching();
                 // completeFetching();
-                Log.d("my text", "onPostExecute synonyms: failed to fetch synonym");
+                Log.d("my text", "onPostExecute meaning: failed to fetch meaning");
             }
 
         }
