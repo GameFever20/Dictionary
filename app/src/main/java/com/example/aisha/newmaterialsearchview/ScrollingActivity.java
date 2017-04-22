@@ -23,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -53,6 +56,10 @@ public class ScrollingActivity extends AppCompatActivity {
     static ArrayList<String> definitiontextlistoftabbed;
     static ArrayList<String> definitionpartofspeechlistoftabbed;
 
+    //adview for banner add
+    private AdView mAdView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +89,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
         fav_imageview = (ImageView) findViewById(R.id.fav_imageview);
-        search_view_srcolling = (SearchView) findViewById(R.id.search_view_srcolling);
+        search_view_srcolling = (SearchView) findViewById(R.id.search_view_srcolling_word_of_the_day);
         scrollingpronunciationtv = (TextView) findViewById(R.id.scrollingpronunciationtv);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -114,9 +121,40 @@ public class ScrollingActivity extends AppCompatActivity {
 
             }
         });
+        loadMyAds();
+
+        search_view_srcolling.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SearchWord(query);
+                return true;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
 
     }
 
+    public void loadMyAds(){
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+    }
+
+    public void SearchWord(String word){
+
+        Intent intent = new Intent(ScrollingActivity.this, ScrollingDictionaryDetailActivity.class);
+        intent.putExtra("WordName", word);
+        startActivity(intent);
+
+
+    }
     public void textToSpeechcall(String word) {
 
 

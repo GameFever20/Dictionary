@@ -4,6 +4,7 @@ package com.example.aisha.newmaterialsearchview;
  * Created by Aisha on 4/9/2017.
  */
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 
@@ -44,13 +45,6 @@ public class Dictionary {
     private boolean isPronunciationFetched;
     private boolean exampleFetched;
 
-    public boolean isPronunciationFetchedCheck() {
-        return pronunciationFetchedCheck;
-    }
-
-    public void setPronunciationFetchedCheck(boolean pronunciationFetchedCheck) {
-        this.pronunciationFetchedCheck = pronunciationFetchedCheck;
-    }
 
     private boolean pronunciationFetchedCheck;
    // private boolean synonymFetched;
@@ -65,10 +59,21 @@ public class Dictionary {
     private ArrayList<String> wordAntonym;
     private ArrayList<String> wordPartOfSpeech;
 
+    ProgressDialog progressDialog;
+
 
     public boolean isCalledForPronunciation() {
         return isCalledForPronunciation;
     }
+
+    public boolean isPronunciationFetchedCheck() {
+        return pronunciationFetchedCheck;
+    }
+
+    public void setPronunciationFetchedCheck(boolean pronunciationFetchedCheck) {
+        this.pronunciationFetchedCheck = pronunciationFetchedCheck;
+    }
+
 
     public void setCalledForPronunciation(boolean calledForPronunciation) {
         isCalledForPronunciation = calledForPronunciation;
@@ -237,6 +242,10 @@ public class Dictionary {
 
     public void fetchWordMeaning(String mword, ScrollingDictionaryDetailActivity activity) {
 
+        progressDialog=new ProgressDialog(activity);
+        progressDialog.setTitle("Loading..");
+        progressDialog.setMessage("Fetching word for increasing your vocabulary \n Be Patient :)");
+        progressDialog.show();
         String s=mword;
         s=s.toLowerCase().trim();
         this.setWord(s);
@@ -277,6 +286,7 @@ public class Dictionary {
                 mainActivity.updateDictionaryText(this);
 
             } else if (scrollingDictionaryDetailActivity != null) {
+                progressDialog.cancel();
                 scrollingDictionaryDetailActivity.updateDictionaryText(this);
             }
             Log.d("Tag", "completeFetching: " + toString());

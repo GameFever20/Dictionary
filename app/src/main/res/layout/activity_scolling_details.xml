@@ -83,7 +83,6 @@
                     android:layout_width="51dp"
                     android:layout_height="50dp"
                     android:onClick="addToFavouriteMethod"
-                    android:background="@drawable/ic_action_name"
                     android:id="@+id/fav_imageview"
                     />
             </LinearLayout>

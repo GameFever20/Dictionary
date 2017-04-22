@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -55,6 +58,10 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
     private static ArrayList<String> wordSameContext = new ArrayList<>();
     private static ArrayList<String> wordSynonms = new ArrayList<>();
     private static ArrayList<String> wordAntonym = new ArrayList<>();
+
+    //adview for banner add
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +126,9 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
                 Dictionary dictionary = new Dictionary();
                 dictionary.fetchWordMeaning(query, ScrollingDictionaryDetailActivity.this);
                 */
-                callingDictionaryforResults(query);
+                //callingDictionaryforResults(query);
+
+                SearchWord(query);
 
                 //mainActivity.gettingWordCallingDictionary(query);
                 Toast.makeText(ScrollingDictionaryDetailActivity.this, "Query is " + query, Toast.LENGTH_SHORT).show();
@@ -153,6 +162,21 @@ public class ScrollingDictionaryDetailActivity extends AppCompatActivity {
 
             }
         });
+        loadMyAds();
+    }
+
+    public void loadMyAds(){
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+    }
+
+
+    private void SearchWord(String query) {
+        Intent intent = new Intent(this, ScrollingDictionaryDetailActivity.class);
+        intent.putExtra("WordName", query);
+        startActivity(intent);
     }
 
     public void textToSpeechcall(String word) {

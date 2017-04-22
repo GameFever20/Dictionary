@@ -28,6 +28,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import br.com.mauker.materialsearchview.MaterialSearchView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
     TextView meaningofthewordoftheday;
 
     Dictionaryrandomwords dictionaryrandomwords;
-
     TextToSpeech textToSpeech;
     ImageButton textToSpeechbtnWordOftheday;
+
+    //adview for banner add
+    private AdView mAdView;
 
 
     ArrayList<Dictionary> myrandomWordsArraylist = new ArrayList<>();
@@ -91,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "CONNECT TO INTERNET", Toast.LENGTH_LONG).show();
         }
 
+        //Load adds in dictioanry
+        loadMyAds();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -100,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //  Dictionary dictionary = new Dictionary();
                 //dictionary.fetchWordMeaning("efficient", MainActivity.this);
+
 
                 searchView.openSearch();
                 searchTextHandleMethod();
@@ -126,6 +134,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void loadMyAds(){
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+    }
     public void textToSpeechcall(String word) {
 
 
@@ -222,8 +236,21 @@ public class MainActivity extends AppCompatActivity {
             // searchViewHandlesMethod();
             searchTextHandleMethod();
         }
+        if (id==R.id.share_menu){
+            shareAppViaMedia();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void shareAppViaMedia(){
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "https://play.google.com/store/apps/details?id=app.craftystudio.dictionary";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        Log.d("Share app","Done!");
+
     }
 
     @Override

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dictionary app</string>
+    <string name="app_name">Dictionary</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_scrolling_for_detail">ScrollingForDetailActivity</string>
     <string name="large_text">
@@ -95,7 +95,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_tabbed_detail">TabbedDetailActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="title_activity_scrolling_dictionary_detail">ScrollingDictionaryDetailActivity
-    </string>
+    <string name="title_activity_scrolling_dictionary_detail">ScrollingDictionaryDetailActivity</string>
     <string name="title_activity_bookmark_storing">BookmarkStoringActivity</string>
+    <string name="banner_ad_unit_id">ca-app-pub-8455191357100024/1312572798</string>
+
 </resources>

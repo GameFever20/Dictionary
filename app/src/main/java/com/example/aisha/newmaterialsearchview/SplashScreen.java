@@ -12,8 +12,7 @@ import java.util.Calendar;
 public class SplashScreen extends AppCompatActivity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 3000;
-    DictionaryWordReceivingClass dictionaryWordReceivingClass;
+    private static int SPLASH_TIME_OUT = 2000;
 
 
     @Override
